@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+  <link href="/static/chat_style/bootstrap.min.css" rel="stylesheet">
+  <script src="/static/chat_style/bootstrap.min.js"></script>
+  <script src="/static/chat_style/jquery.min.js"></script>
+  <style>
+    body,html{height:100%;margin:0;background:#f5f7fa;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+    .home-link{position:fixed;top:20px;left:20px;color:#14b8a6;text-decoration:none;font-weight:600;font-size:14px;padding:8px 16px;background:white;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .3s;z-index:1000}
+    .home-link:hover{background:#14b8a6;color:white;transform:translateY(-2px)}
+    .chat{margin-top:auto;margin-bottom:auto}
+    .card{height:600px;border-radius:20px!important;background-color:#fff!important;box-shadow:0 10px 40px rgba(0,0,0,.1);border:none!important}
+    .msg_card_body{overflow-y:auto;background:#f8fafc;padding:20px}
+    .card-header{border-radius:20px 20px 0 0!important;border-bottom:0!important;background:linear-gradient(135deg,#14b8a6,#0d9488)!important;padding:20px!important}
+    .card-footer{border-radius:0 0 20px 20px!important;border-top:1px solid #e2e8f0!important;background:white!important;padding:20px!important}
+    .type_msg{background-color:#f1f5f9!important;border:2px solid #e2e8f0!important;color:#1e293b!important;height:50px!important;overflow-y:auto;border-radius:25px!important;padding:12px 20px!important;font-size:14px;resize:none;transition:all .3s}
+    .type_msg:focus{box-shadow:0 0 0 3px rgba(20,184,166,.1)!important;outline:0!important;border-color:#14b8a6!important}
+    .attach_btn{border-radius:25px!important;background-color:#f1f5f9!important;border:2px solid #e2e8f0!important;color:#64748b!important;cursor:pointer;width:45px;height:50px;display:flex;align-items:center;justify-content:center;margin-right:10px;transition:all .3s}
+    .attach_btn:hover{background-color:#e2e8f0!important;color:#14b8a6!important}
+    .send_btn{border-radius:25px!important;background:linear-gradient(135deg,#14b8a6,#0d9488)!important;border:none!important;color:white!important;cursor:pointer;width:50px;height:50px;display:flex;align-items:center;justify-content:center;margin-left:10px;transition:all .3s;box-shadow:0 4px 12px rgba(20,184,166,.3)}
+    .send_btn:hover{transform:translateY(-2px)}
+    .user_img{height:50px;width:50px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.1);object-fit:cover}
+    .img_cont{position:relative;height:50px;width:50px}
+    .online_icon{position:absolute;height:12px;width:12px;background-color:#10b981;border-radius:50%;bottom:0;right:0;border:2px solid white}
+    .user_info{margin-top:auto;margin-bottom:auto;margin-left:15px}
+    .user_info h6{color:white;margin:0;font-weight:600}
+    .user_info small{color:rgba(255,255,255,.85)}
+    .msg_head{position:relative}
+    #action_menu_btn{position:absolute;right:20px;top:50%;transform:translateY(-50%);color:white;cursor:pointer;font-size:20px;padding:8px;border-radius:50%}
+    #videocall_btn{position:absolute;right:60px;top:50%;transform:translateY(-50%);color:white;cursor:pointer;font-size:18px;padding:8px;border-radius:50%;background:rgba(255,255,255,.15);border:none;transition:all .3s;display:flex;align-items:center;justify-content:center;width:38px;height:38px}
+    #videocall_btn:hover{background:rgba(255,255,255,.3);transform:translateY(-50%) scale(1.1)}
+    #videocall_btn.in-call{background:#ef4444;animation:pulse-red 1.5s ease-in-out infinite}
+    @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
+    #vcmodal{display:none;position:fixed;inset:0;z-index:9999;background:#0d1117;flex-direction:column}
+    #vcmodal.active{display:flex}
+    #vcbar{background:#161b22;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid #30363d}
+    #vcbar .vtitle{color:#e6edf3;font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
+    .vdot{width:8px;height:8px;border-radius:50%;background:#10b981;animation:vblink 1.5s infinite}
+    @keyframes vblink{0%,100%{opacity:1}50%{opacity:.2}}
+    #vcbar .vbtns{display:flex;gap:10px;align-items:center}
+    .vbtn{border:none;border-radius:20px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
+    .vbtn:hover{transform:translateY(-1px)}
+    .vbtn-mic{background:#21262d;color:#e6edf3}
+    .vbtn-cam{background:#21262d;color:#e6edf3}
+    .vbtn-end{background:#da3633;color:white}
+    #vcstage{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px;min-height:0;background:#0d1117}
+    .vbox{position:relative;background:#161b22;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .vbox video{width:100%;height:100%;object-fit:cover;display:block}
+    .vlabel{position:absolute;bottom:8px;left:10px;color:white;font-size:12px;font-weight:600;background:rgba(0,0,0,.5);padding:2px 8px;border-radius:10px}
+    .vbox-placeholder{color:#484f58;font-size:40px;display:flex;flex-direction:column;align-items:center;gap:10px}
+    .vbox-placeholder span{font-size:13px;color:#6e7681}
+    #vstatus{position:absolute;bottom:0;left:50%;transform:translateX(-50%);background:rgba(13,17,23,.85);color:#8b949e;font-size:12px;padding:4px 12px;border-radius:10px 10px 0 0;white-space:nowrap}
+    .msg_cotainer{margin:auto 0 auto 10px;border-radius:20px 20px 20px 5px;background:#fff;padding:12px 16px;max-width:70%;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #e2e8f0;color:#1e293b;font-size:14px;line-height:1.5}
+    .msg_cotainer_send{margin:auto 10px auto 0;border-radius:20px 20px 5px 20px;background:linear-gradient(135deg,#14b8a6,#0d9488);padding:12px 16px;max-width:70%;color:white;font-size:14px;line-height:1.5}
+    .msg_cotainer.img-bubble,.msg_cotainer_send.img-bubble{padding:4px;background:transparent;border:none;box-shadow:none}
+    .chat-img{max-width:220px;max-height:220px;border-radius:14px;display:block;cursor:pointer}
+    .chat-img:hover{opacity:.88}
+    .msg_card_body::-webkit-scrollbar{width:6px}
+    .msg_card_body::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+    @media(max-width:576px){.card{height:500px}}
+
+    /* ── Quick Reply Panels ── */
+    .qr-panel{
+      position:absolute;bottom:90px;left:50%;transform:translateX(-50%);
+      width:calc(100% - 40px);max-width:640px;
+      background:white;border-radius:16px;
+      box-shadow:0 8px 30px rgba(0,0,0,.15);
+      border:1px solid #e2e8f0;padding:12px;
+      z-index:500;display:none;flex-direction:column;gap:5px;
+      max-height:430px;overflow-y:auto;
+    }
+    .qr-panel.visible{display:flex}
+    .qr-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 4px 8px;border-bottom:1px solid #e2e8f0;margin-bottom:2px;
+      position:sticky;top:0;background:white;z-index:1;flex-shrink:0;
+    }
+    .qr-header-left{display:flex;align-items:center;gap:8px}
+    .qr-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
+    .badge-teal{background:#e0f7f4;color:#0d9488}
+    .badge-blue{background:#dbeafe;color:#1d4ed8}
+    .qr-title{font-size:12px;color:#64748b;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+    .qr-close{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:18px;padding:0;line-height:1}
+    .qr-close:hover{color:#475569}
+    .qr-item{
+      display:flex;align-items:flex-start;gap:10px;
+      padding:9px 13px;border-radius:10px;cursor:pointer;
+      transition:background .15s,border-color .15s;
+      border:1px solid #e2e8f0;background:#f8fafc;flex-shrink:0;
+    }
+    /* panel 1 hover — teal */
+    #qr-panel-1 .qr-item:hover{background:#e0f7f4;border-color:#14b8a6}
+    #qr-panel-1 .qr-item:hover .qr-num{background:#14b8a6;color:white}
+    #qr-panel-1 .qr-item:hover .qr-text{color:#0d9488}
+    /* panel 2 hover — blue */
+    #qr-panel-2 .qr-item:hover{background:#dbeafe;border-color:#2563eb}
+    #qr-panel-2 .qr-item:hover .qr-num{background:#2563eb;color:white}
+    #qr-panel-2 .qr-item:hover .qr-text{color:#1d4ed8}
+    .qr-num{
+      width:22px;height:22px;border-radius:50%;flex-shrink:0;margin-top:1px;
+      background:#e2e8f0;color:#64748b;
+      font-size:11px;font-weight:700;
+      display:flex;align-items:center;justify-content:center;
+      transition:background .15s,color .15s;
+    }
+    .qr-text{font-size:13px;color:#1e293b;line-height:1.4}
+    .qr-hint{text-align:center;font-size:11px;color:#cbd5e1;padding-top:6px;flex-shrink:0}
+  </style>
+</head>
+<body>
+<div class="container-fluid h-100">
+  <div class="row justify-content-center h-100">
+    <div class="col-md-8 col-xl-6 chat" style="position:relative">
+      <a href="/expertview_user" class="home-link"><i class="fas fa-arrow-left"></i> Back</a>
+      <div class="card">
+        <div class="card-header msg_head">
+          <div class="d-flex bd-highlight">
+            <div class="img_cont" id="iiim"></div>
+            <div class="user_info" id="nnnm"></div>
+          </div>
+          <button id="videocall_btn" title="Start video call" onclick="startVideoCall()">
+            <i class="fas fa-video"></i>
+          </button>
+          <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
+        </div>
+        <div class="card-body msg_card_body"><div id="send1"></div></div>
+        <div class="card-footer">
+          <div class="input-group">
+            <div class="input-group-append">
+              <label for="imageUpload" class="input-group-text attach_btn" style="cursor:pointer" title="Send image">
+                <i class="fas fa-image"></i>
+              </label>
+              <input type="file" id="imageUpload" accept="image/*" style="display:none">
+            </div>
+            <textarea id="textfield" class="form-control type_msg" placeholder="Type your message Here.."></textarea>
+            <div class="input-group-append">
+              <button class="input-group-text send_btn" id="button">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 1 — General (5 replies) -->
+      <div id="qr-panel-1" class="qr-panel">
+        <div class="qr-header">
+          <div class="qr-header-left">
+            <span class="qr-badge badge-teal">Key 1</span>
+            <span class="qr-title">General Replies</span>
+          </div>
+          <button class="qr-close" onclick="closeAll()">&times;</button>
+        </div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">1</div><div class="qr-text">How can I assist you today?</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">2</div><div class="qr-text">Please describe your symptoms in detail.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">3</div><div class="qr-text">How long have you been experiencing this?</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">4</div><div class="qr-text">I will review your reports and get back to you shortly.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">5</div><div class="qr-text">Please take the prescribed medication and rest well.</div></div>
+        <div class="qr-hint">Click any reply to send instantly · Esc to close</div>
+      </div>
+
+      <!-- Panel 2 — Doctor Replies (10 replies) -->
+      <div id="qr-panel-2" class="qr-panel">
+        <div class="qr-header">
+          <div class="qr-header-left">
+            <span class="qr-badge badge-blue">Key 2</span>
+            <span class="qr-title">Doctor Replies</span>
+          </div>
+          <button class="qr-close" onclick="closeAll()">&times;</button>
+        </div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">1</div><div class="qr-text">Based on your symptoms, I recommend getting a blood test done as soon as possible.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">2</div><div class="qr-text">Please avoid self-medication. I will prescribe the appropriate medicine for you.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">3</div><div class="qr-text">Drink plenty of water and take adequate rest. This should help with your recovery.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">4</div><div class="qr-text">Your reports look normal. There is nothing to worry about at this time.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">5</div><div class="qr-text">I would like to schedule a follow-up consultation in 3 days. Please book an appointment.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">6</div><div class="qr-text">The symptoms you described could be viral. Please isolate and monitor your temperature.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">7</div><div class="qr-text">I am referring you to a specialist for further evaluation. Please see them at the earliest.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">8</div><div class="qr-text">Please upload a clear photo of the affected area so I can assess it better.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">9</div><div class="qr-text">Continue with the current medication for 5 more days and let me know if there is no improvement.</div></div>
+        <div class="qr-item" onclick="pickReply(this)"><div class="qr-num">10</div><div class="qr-text">If the pain worsens or you develop fever above 102°F, please visit the emergency department immediately.</div></div>
+        <div class="qr-hint">Click any reply to send instantly · Esc to close</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Video Call Modal -->
+<div id="vcmodal">
+  <div id="vcbar">
+    <div class="vtitle"><div class="vdot"></div><span id="vctitle">Video call</span></div>
+    <div class="vbtns">
+      <button class="vbtn vbtn-mic" id="micbtn" onclick="toggleMic()"><i class="fas fa-microphone" id="micicon"></i> Mic</button>
+      <button class="vbtn vbtn-cam" id="cambtn" onclick="toggleCam()"><i class="fas fa-video" id="camicon"></i> Camera</button>
+      <button class="vbtn vbtn-end" onclick="endVideoCall()"><i class="fas fa-phone-slash"></i> End Call</button>
+    </div>
+  </div>
+  <div id="vcstage">
+    <div class="vbox" id="localbox">
+      <video id="localvid" autoplay muted playsinline></video>
+      <div class="vlabel">You (Doctor)</div>
+    </div>
+    <div class="vbox" id="remotebox">
+      <div class="vbox-placeholder" id="remoteplaceholder"><i class="fas fa-user-circle"></i><span>Waiting for patient...</span></div>
+      <video id="remotevid" autoplay playsinline style="display:none"></video>
+      <div class="vlabel">Patient</div>
+    </div>
+  </div>
+  <div id="vstatus">Connecting...</div>
+</div>
+
+<script>
+  /* ── Quick Reply Logic ────────────────────────────────────────────────── */
+  var _activePanel = null;
+
+  function openPanel(num){
+    closeAll();
+    _activePanel = num;
+    document.getElementById('qr-panel-' + num).classList.add('visible');
+    var tf = document.getElementById('textfield');
+    tf.value = tf.value.replace(/[12]$/, '');
+  }
+
+  function closeAll(){
+    _activePanel = null;
+    document.getElementById('qr-panel-1').classList.remove('visible');
+    document.getElementById('qr-panel-2').classList.remove('visible');
+    document.getElementById('textfield').focus();
+  }
+
+  function pickReply(el){
+    var text = el.querySelector('.qr-text').textContent.trim();
+    document.getElementById('textfield').value = text;
+    closeAll();
+    document.getElementById('button').click();
+  }
+
+  document.getElementById('textfield').addEventListener('keydown', function(e){
+    if ((e.key === '1' || e.key === '2') && this.value.trim() === ''){
+      e.preventDefault();
+      openPanel(e.key);
+      return;
+    }
+    if (e.which === 13 && !e.shiftKey){ e.preventDefault(); document.getElementById('button').click(); }
+  });
+
+  document.addEventListener('click', function(e){
+    if (!_activePanel) return;
+    var p1 = document.getElementById('qr-panel-1');
+    var p2 = document.getElementById('qr-panel-2');
+    var tf = document.getElementById('textfield');
+    if (!p1.contains(e.target) && !p2.contains(e.target) && e.target !== tf) closeAll();
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && _activePanel) closeAll();
+  });
+
+  /* =========================================================================
+     WebRTC — Doctor side
+  ========================================================================= */
+  var _expertId="",_userId="",_userName="",_inCall=false,_role="doctor";
+  var _localStream=null,_pc=null,_roomName="",_pollTimer=null;
+  var _micOn=true,_camOn=true,_pendingIce=[],_offerSent=false,_appliedPatientIce=0;
+  var STUN={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]};
+
+  function buildRoomName(a,b){return "AiDoctorExpert"+a+"User"+b;}
+  function setStatus(t){document.getElementById('vstatus').textContent=t;}
+
+  async function startVideoCall(){
+    if(_inCall){endVideoCall();return;}
+    if(!_expertId||!_userId){alert("Chat not loaded yet.");return;}
+    _roomName=buildRoomName(_expertId,_userId);_inCall=true;_offerSent=false;_pendingIce=[];_appliedPatientIce=0;
+    document.getElementById('vcmodal').classList.add('active');
+    document.getElementById('vctitle').textContent="Call with "+(_userName||"Patient");
+    document.getElementById('videocall_btn').classList.add('in-call');
+    setStatus("Starting camera...");
+    try{
+      _localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+      document.getElementById('localvid').srcObject=_localStream;
+      _pc=new RTCPeerConnection(STUN);
+      _localStream.getTracks().forEach(function(t){_pc.addTrack(t,_localStream);});
+      _pc.ontrack=function(e){
+        var rv=document.getElementById('remotevid');rv.srcObject=e.streams[0];rv.style.display="block";
+        document.getElementById('remoteplaceholder').style.display="none";setStatus("Connected ✓");
+      };
+      _pc.onicecandidate=function(e){
+        if(!e.candidate)return;
+        if(_offerSent)sendSignal("ice_doctor",JSON.stringify(e.candidate));
+        else _pendingIce.push(JSON.stringify(e.candidate));
+      };
+      _pc.onconnectionstatechange=function(){
+        if(!_pc)return;var s=_pc.connectionState;
+        if(s==="connected")setStatus("Connected ✓");
+        else if(s==="disconnected")setStatus("Patient disconnected");
+        else if(s==="failed")setStatus("Connection failed — try again");
+      };
+      var offer=await _pc.createOffer();
+      await _pc.setLocalDescription(offer);
+      await sendSignal("offer",JSON.stringify(offer));
+      _offerSent=true;
+      for(var ic of _pendingIce)await sendSignal("ice_doctor",ic);
+      _pendingIce=[];
+      setStatus("Waiting for patient to join...");
+      _pollTimer=setInterval(pollForAnswer,2000);
+    }catch(err){endVideoCall();alert("Camera/mic error: "+err.message+"\nPlease allow camera & microphone access and try again.");}
+  }
+
+  async function pollForAnswer(){
+    if(!_pc)return;
+    try{
+      var res=await fetch("/webrtc_signal/?room="+encodeURIComponent(_roomName));
+      var data=await res.json();
+      if(!data.offer&&_pc&&_pc.remoteDescription){setStatus("Patient ended the call");setTimeout(endVideoCall,1500);return;}
+      if(data.answer&&_pc&&!_pc.remoteDescription){
+        var ans=JSON.parse(data.answer);
+        await _pc.setRemoteDescription(new RTCSessionDescription(ans));
+        setStatus("Patient joined — connecting...");
+      }
+      if(data.ice_patient&&Array.isArray(data.ice_patient)){
+        for(var i=_appliedPatientIce;i<data.ice_patient.length;i++){
+          try{await _pc.addIceCandidate(new RTCIceCandidate(JSON.parse(data.ice_patient[i])));}catch(e){}
+        }
+        _appliedPatientIce=data.ice_patient.length;
+      }
+    }catch(e){}
+  }
+
+  async function sendSignal(type,data){
+    try{
+      await fetch("/webrtc_signal/",{method:"POST",
+        headers:{"Content-Type":"application/json","X-CSRFToken":getCookie("csrftoken")},
+        body:JSON.stringify({room:_roomName,role:_role,type:type,data:data})});
+    }catch(e){}
+  }
+
+  function endVideoCall(){
+    clearInterval(_pollTimer);_pollTimer=null;
+    if(_pc){try{_pc.close();}catch(e){}_pc=null;}
+    if(_localStream){_localStream.getTracks().forEach(function(t){t.stop();});_localStream=null;}
+    document.getElementById('localvid').srcObject=null;
+    document.getElementById('remotevid').srcObject=null;
+    document.getElementById('remotevid').style.display="none";
+    document.getElementById('remoteplaceholder').style.display="flex";
+    document.getElementById('vcmodal').classList.remove('active');
+    document.getElementById('videocall_btn').classList.remove('in-call');
+    _inCall=false;_offerSent=false;_pendingIce=[];_appliedPatientIce=0;
+    var payload=JSON.stringify({room:_roomName,role:_role,type:"end",data:"1"});
+    if(navigator.sendBeacon)navigator.sendBeacon("/webrtc_signal/",new Blob([payload],{type:"application/json"}));
+    else sendSignal("end","1");
+  }
+
+  function toggleMic(){
+    if(!_localStream)return;_micOn=!_micOn;
+    _localStream.getAudioTracks().forEach(function(t){t.enabled=_micOn;});
+    document.getElementById('micicon').className=_micOn?"fas fa-microphone":"fas fa-microphone-slash";
+    document.getElementById('micbtn').style.background=_micOn?"#21262d":"#da3633";
+  }
+  function toggleCam(){
+    if(!_localStream)return;_camOn=!_camOn;
+    _localStream.getVideoTracks().forEach(function(t){t.enabled=_camOn;});
+    document.getElementById('camicon').className=_camOn?"fas fa-video":"fas fa-video-slash";
+    document.getElementById('cambtn').style.background=_camOn?"#21262d":"#da3633";
+  }
+
+  /* ── Chat ── */
+  function buildMsgContent(mesg,msgType){
+    if(msgType==='image'&&mesg)return "<img src='"+mesg+"' class='chat-img' onclick=\"window.open('"+mesg+"','_blank')\" onerror=\"this.style.display='none'\">";
+    return mesg;
+  }
+  function appendMessage(type,user_lid,mesg,msgType){
+    var content=buildMsgContent(mesg,msgType);
+    var imgClass=msgType==='image'?' img-bubble':'';
+    if(type!=user_lid)$("#send1").append("<div class='d-flex justify-content-end mb-4'><div class='msg_cotainer_send"+imgClass+"'>"+content+"</div></div>");
+    else $("#send1").append("<div class='d-flex justify-content-start mb-4'><div class='msg_cotainer"+imgClass+"'>"+content+"</div></div>");
+  }
+  function test(){
+    $.ajax({url:"/chat_view",type:"GET",contentType:"application/json;charset=utf-8",dataType:"json",
+      success:function(dat){
+        var data=dat["data"]||[];var name=dat["name"]||"Patient";
+        var photo=dat["photo"]||"";var user_lid=String(dat["toid"]||"");
+        var expert_id=String(dat["fromid"]||"");
+        _expertId=expert_id;_userId=user_lid;_userName=name;
+        $("#iiim").html("<img src='"+photo+"' class='rounded-circle user_img'><span class='online_icon'></span>");
+        $("#nnnm").html("<h6>"+name+"</h6><small>online</small>");
+        $("#send1").html("");
+        for(var i=0;i<data.length;i++)appendMessage(data[i]['from'],user_lid,data[i]['message'],data[i]['msg_type']||'text');
+        var body=$(".msg_card_body");body.scrollTop(body[0].scrollHeight);
+      },error:function(ts){console.log("Error:",ts);}
+    });
+  }
+  $("#button").click(function(){
+    var msg=$("#textfield").val().trim();if(!msg)return;
+    $.ajax({url:"/chat_send/"+encodeURIComponent(msg),type:"GET",
+      contentType:"application/json;charset=utf-8",dataType:"json",
+      success:function(){$("#textfield").val("");test();},
+      error:function(ts){console.log("Send error:",ts);}
+    });
+  });
+  $("#imageUpload").change(function(){
+    var file=this.files[0];if(!file)return;
+    var localUrl=URL.createObjectURL(file);
+    $("#send1").append("<div class='d-flex justify-content-end mb-4' id='uploading-row'><div class='msg_cotainer_send img-bubble'><img src='"+localUrl+"' class='chat-img' style='opacity:.5'></div></div>");
+    $(".msg_card_body").scrollTop($(".msg_card_body")[0].scrollHeight);
+    var fd=new FormData();fd.append('image',file);fd.append('msg_type','image');
+    $.ajax({url:"/chat_send_image",type:"POST",data:fd,processData:false,contentType:false,
+      headers:{"X-CSRFToken":getCookie("csrftoken")},
+      success:function(){$("#uploading-row").remove();$("#imageUpload").val("");test();},
+      error:function(){$("#uploading-row").remove();alert("Failed to send image.");}
+    });
+  });
+  function getCookie(name){
+    var v=null;
+    if(document.cookie)document.cookie.split(';').forEach(function(c){c=c.trim();if(c.startsWith(name+'='))v=decodeURIComponent(c.substring(name.length+1));});
+    return v;
+  }
+  $(document).ready(function(){test();setInterval(test,2000);});
+</script>
+</body>
+</html>

@@ -1,0 +1,967 @@
+{% extends 'admin/adminhome.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg: #f4f5f9;
+        --surface: #ffffff;
+        --surface2: #f0f1f6;
+        --border: rgba(0,0,0,0.08);
+        --accent: #7c3aed;
+        --accent2: #059669;
+        --accent3: #ea6c00;
+        --accent4: #2563eb;
+        --text: #111827;
+        --muted: #6b7280;
+        --gold: #d97706;
+        --danger: #dc2626;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .fb-wrap {
+        min-height: 100vh;
+        background: var(--bg);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text);
+        padding: 2.5rem 2rem;
+    }
+
+    /* ── HEADER ── */
+    .fb-header {
+        max-width: 1300px;
+        margin: 0 auto 2.5rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .fb-header-left h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.3rem;
+    }
+
+    .fb-header-left p { color: var(--muted); font-size: 0.9rem; }
+
+    .total-badge {
+        background: linear-gradient(135deg, #7c3aed15, #2563eb15);
+        border: 1px solid #7c3aed33;
+        border-radius: 50px;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.85rem;
+        color: var(--accent);
+        font-weight: 600;
+        white-space: nowrap;
+        align-self: center;
+    }
+
+    /* ── PERFORMANCE BANNER ── */
+    .perf-banner {
+        max-width: 1300px;
+        margin: 0 auto 2rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+        gap: 0;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .perf-banner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 20% 50%, #7c3aed08 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 50%, #2563eb08 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .perf-divider {
+        width: 1px;
+        height: 60px;
+        background: var(--border);
+    }
+
+    .perf-stat {
+        text-align: center;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .perf-stat-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 0.4rem;
+    }
+
+    .perf-stat-label {
+        font-size: 0.78rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 500;
+    }
+
+    .perf-stat-sub {
+        font-size: 0.78rem;
+        margin-top: 0.3rem;
+        font-weight: 500;
+    }
+
+    /* ── PERFORMANCE SCORE RING ── */
+    .score-ring-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+    }
+
+    .score-ring-svg { transform: rotate(-90deg); }
+
+    .score-ring-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .score-ring-num {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: block;
+        line-height: 1;
+    }
+
+    .score-ring-pct { font-size: 0.65rem; color: var(--muted); }
+
+    /* ── ANALYTICS ROW ── */
+    .analytics-row {
+        max-width: 1300px;
+        margin: 0 auto 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .analytics-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .analytics-card h3 {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 1.2rem;
+        font-weight: 600;
+    }
+
+    /* Rating distribution bars */
+    .dist-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .dist-label {
+        font-size: 0.82rem;
+        color: var(--muted);
+        width: 24px;
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+    .dist-track {
+        flex: 1;
+        height: 8px;
+        background: rgba(0,0,0,0.07);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+    .dist-fill {
+        height: 100%;
+        border-radius: 50px;
+        background: var(--gold);
+        width: 0%;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dist-count {
+        font-size: 0.78rem;
+        color: var(--muted);
+        width: 20px;
+        flex-shrink: 0;
+    }
+
+    /* Sentiment */
+    .sentiment-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .sentiment-item {
+        background: var(--surface2);
+        border-radius: 10px;
+        padding: 0.9rem;
+        text-align: center;
+    }
+
+    .sentiment-emoji { font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .sentiment-num { font-size: 1.3rem; font-weight: 700; }
+    .sentiment-lbl { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* Trend sparkline */
+    .sparkline-wrap {
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        height: 60px;
+        margin-bottom: 1rem;
+    }
+
+    .spark-bar {
+        flex: 1;
+        background: linear-gradient(to top, #7c3aed, #2563eb);
+        border-radius: 3px 3px 0 0;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+
+    .spark-bar:hover { opacity: 1; }
+
+    .spark-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.68rem;
+        color: var(--muted);
+    }
+
+    /* Keyword pills */
+    .keyword-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .kw-pill {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 50px;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.78rem;
+        color: var(--muted);
+        cursor: default;
+        transition: all 0.2s;
+    }
+
+    .kw-pill.positive { border-color: #34d39933; color: var(--accent2); }
+    .kw-pill.negative { border-color: #f8717133; color: var(--danger); }
+
+    /* ── PERFORMANCE GRADE ── */
+    .grade-wrap {
+        max-width: 1300px;
+        margin: 0 auto 2rem;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1.5rem;
+        align-items: center;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.5rem 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .grade-wrap::after {
+        content: '';
+        position: absolute;
+        right: -40px; top: -40px;
+        width: 160px; height: 160px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #7c3aed10, transparent 70%);
+        pointer-events: none;
+    }
+
+    .grade-letter {
+        font-family: 'Playfair Display', serif;
+        font-size: 5rem;
+        font-weight: 700;
+        line-height: 1;
+        width: 110px; height: 110px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 16px;
+        border: 2px solid;
+        position: relative; z-index: 1;
+    }
+
+    .grade-letter.A { color: var(--accent2); border-color: #34d39933; background: #34d3990d; }
+    .grade-letter.B { color: var(--accent4); border-color: #60a5fa33; background: #60a5fa0d; }
+    .grade-letter.C { color: var(--gold);    border-color: #f59e0b33; background: #f59e0b0d; }
+    .grade-letter.D { color: var(--accent3); border-color: #fb923c33; background: #fb923c0d; }
+    .grade-letter.F { color: var(--danger);  border-color: #f8717133; background: #f871710d; }
+    .grade-letter.X { color: var(--muted);   border-color: var(--border); background: transparent; }
+
+    .grade-info h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .grade-info p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 600px; }
+
+    .grade-pills {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 0.8rem;
+    }
+
+    .grade-pill {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .grade-pill.strength { background: #34d3991a; color: var(--accent2); }
+    .grade-pill.improve  { background: #f871711a; color: var(--danger); }
+
+    /* ── FILTERS ── */
+    .filter-row {
+        max-width: 1300px;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 50px;
+        padding: 0.45rem 1.1rem;
+        font-size: 0.82rem;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+    }
+
+    .sort-select {
+        margin-left: auto;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.45rem 1rem;
+        font-size: 0.82rem;
+        color: var(--muted);
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        outline: none;
+    }
+
+    /* ── FEEDBACK GRID ── */
+    .feedback-grid {
+        max-width: 1300px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+
+    .feedback-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.5rem;
+        transition: all 0.25s;
+        position: relative;
+        overflow: hidden;
+        animation: fadeUp 0.4s ease both;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .feedback-card::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 3px;
+        border-radius: 0 2px 2px 0;
+    }
+
+    .feedback-card.rating-5::before { background: var(--accent2); }
+    .feedback-card.rating-4::before { background: var(--accent4); }
+    .feedback-card.rating-3::before { background: var(--gold); }
+    .feedback-card.rating-2::before { background: var(--accent3); }
+    .feedback-card.rating-1::before { background: var(--danger); }
+
+    .feedback-card:hover {
+        border-color: rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .user-avatar {
+        width: 44px; height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #a78bfa, #60a5fa);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .user-name  { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .user-email { color: var(--muted); font-size: 0.78rem; }
+
+    .card-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .stars { display: flex; gap: 2px; }
+    .star  { font-size: 0.95rem; color: var(--gold); }
+    .star.empty { color: #d1d5db; }
+    .rating-num { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+
+    .feedback-text {
+        color: #374151;
+        font-size: 0.9rem;
+        line-height: 1.65;
+        margin-bottom: 1rem;
+        padding: 0.85rem 1rem;
+        background: #f8f9fb;
+        border-radius: 8px;
+    }
+
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .feedback-date { color: var(--muted); font-size: 0.75rem; }
+
+    .sentiment-tag {
+        font-size: 0.72rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .sentiment-tag.pos { background: #34d3991a; color: var(--accent2); }
+    .sentiment-tag.neu { background: #60a5fa1a; color: var(--accent4); }
+    .sentiment-tag.neg { background: #f871711a; color: var(--danger); }
+
+    /* Empty state */
+    .empty-state {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 5rem 2rem;
+        background: var(--surface);
+        border: 1px dashed rgba(0,0,0,0.15);
+        border-radius: 14px;
+    }
+
+    .empty-state-icon { font-size: 3.5rem; margin-bottom: 1rem; opacity: 0.4; }
+    .empty-state h3   { color: var(--muted); font-size: 1.1rem; margin-bottom: 0.4rem; }
+    .empty-state p    { color: rgba(0,0,0,0.3); font-size: 0.85rem; }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+        .perf-banner { grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+        .perf-divider { display: none; }
+        .analytics-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+        .feedback-grid { grid-template-columns: 1fr; }
+        .analytics-row { grid-template-columns: 1fr; }
+        .grade-wrap { grid-template-columns: 1fr; text-align: center; }
+        .grade-letter { margin: 0 auto; }
+        .perf-banner { grid-template-columns: 1fr 1fr; }
+    }
+</style>
+
+<div class="fb-wrap">
+
+    <!-- HEADER -->
+    <div class="fb-header">
+        <div class="fb-header-left">
+            <h1>Expert Performance Dashboard</h1>
+            <p>AI-extracted insights from user feedback · Last updated: {% now "N j, Y" %}</p>
+        </div>
+        <span class="total-badge">{{ data|length }} review{% if data|length != 1 %}s{% endif %}</span>
+    </div>
+
+    <!-- PERFORMANCE GRADE CARD -->
+    <div class="grade-wrap">
+        <div class="grade-letter X" id="grade-letter">–</div>
+        <div class="grade-info">
+            <h2 id="grade-title">Computing performance…</h2>
+            <p id="grade-desc">Analysing feedback to generate your performance profile.</p>
+            <div class="grade-pills" id="grade-pills"></div>
+        </div>
+    </div>
+
+    <!-- STATS BANNER -->
+    <div class="perf-banner">
+        <div class="perf-stat">
+            <div class="perf-stat-value" id="avg-rating" style="color:#f59e0b">–</div>
+            <div class="perf-stat-label">Avg Rating</div>
+            <div class="perf-stat-sub" id="avg-stars" style="color:#f59e0b;font-size:1rem;letter-spacing:2px">–</div>
+        </div>
+        <div class="perf-divider"></div>
+
+        <div class="perf-stat">
+            <div class="perf-stat-value" id="satisfaction-pct" style="color:#34d399">–%</div>
+            <div class="perf-stat-label">Satisfaction Rate</div>
+            <div class="perf-stat-sub" id="satisfied-count" style="color:#34d399">–</div>
+        </div>
+        <div class="perf-divider"></div>
+
+        <div class="perf-stat" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="score-ring-wrap">
+                <svg class="score-ring-svg" width="72" height="72" viewBox="0 0 72 72">
+                    <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="7"/>
+                    <circle id="ring-circle" cx="36" cy="36" r="28" fill="none" stroke="#a78bfa" stroke-width="7"
+                            stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9"
+                            style="transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)"/>
+                </svg>
+                <div class="score-ring-text">
+                    <span class="score-ring-num" id="ring-num">–</span>
+                    <span class="score-ring-pct">/100</span>
+                </div>
+            </div>
+            <div class="perf-stat-label" style="margin-top:0.5rem">Performance Score</div>
+        </div>
+        <div class="perf-divider"></div>
+
+        <div class="perf-stat">
+            <div class="perf-stat-value" id="response-quality" style="color:#60a5fa">–</div>
+            <div class="perf-stat-label">Feedback Depth</div>
+            <div class="perf-stat-sub" id="avg-words" style="color:#60a5fa">– avg words</div>
+        </div>
+        <div class="perf-divider"></div>
+
+        <div class="perf-stat">
+            <div class="perf-stat-value" id="trend-val" style="color:#a78bfa">–</div>
+            <div class="perf-stat-label">Recent Trend</div>
+            <div class="perf-stat-sub" id="trend-sub" style="color:#a78bfa">–</div>
+        </div>
+    </div>
+
+    <!-- ANALYTICS ROW -->
+    <div class="analytics-row">
+
+        <!-- Rating Distribution -->
+        <div class="analytics-card">
+            <h3>⭐ Rating Distribution</h3>
+            <div id="dist-bars">
+                <div class="dist-row"><span class="dist-label">5</span><div class="dist-track"><div class="dist-fill" id="dist-fill-5"></div></div><span class="dist-count" id="dist-count-5">0</span></div>
+                <div class="dist-row"><span class="dist-label">4</span><div class="dist-track"><div class="dist-fill" id="dist-fill-4" style="background:#60a5fa"></div></div><span class="dist-count" id="dist-count-4">0</span></div>
+                <div class="dist-row"><span class="dist-label">3</span><div class="dist-track"><div class="dist-fill" id="dist-fill-3" style="background:#a78bfa"></div></div><span class="dist-count" id="dist-count-3">0</span></div>
+                <div class="dist-row"><span class="dist-label">2</span><div class="dist-track"><div class="dist-fill" id="dist-fill-2" style="background:#fb923c"></div></div><span class="dist-count" id="dist-count-2">0</span></div>
+                <div class="dist-row"><span class="dist-label">1</span><div class="dist-track"><div class="dist-fill" id="dist-fill-1" style="background:#f87171"></div></div><span class="dist-count" id="dist-count-1">0</span></div>
+            </div>
+        </div>
+
+        <!-- Sentiment Breakdown -->
+        <div class="analytics-card">
+            <h3>💬 Sentiment Analysis</h3>
+            <div class="sentiment-grid">
+                <div class="sentiment-item">
+                    <div class="sentiment-emoji">😊</div>
+                    <div class="sentiment-num" id="sent-pos" style="color:var(--accent2)">0</div>
+                    <div class="sentiment-lbl">Positive</div>
+                </div>
+                <div class="sentiment-item">
+                    <div class="sentiment-emoji">😐</div>
+                    <div class="sentiment-num" id="sent-neu" style="color:var(--accent4)">0</div>
+                    <div class="sentiment-lbl">Neutral</div>
+                </div>
+                <div class="sentiment-item">
+                    <div class="sentiment-emoji">😞</div>
+                    <div class="sentiment-num" id="sent-neg" style="color:var(--danger)">0</div>
+                    <div class="sentiment-lbl">Negative</div>
+                </div>
+            </div>
+            <div style="margin-top:1.2rem">
+                <div class="perf-stat-label" style="margin-bottom:0.6rem">Keyword Signals</div>
+                <div class="keyword-cloud" id="keyword-cloud"></div>
+            </div>
+        </div>
+
+        <!-- Rating Trend Sparkline -->
+        <div class="analytics-card">
+            <h3>📈 Rating Trend (Last 10 Reviews)</h3>
+            <div class="sparkline-wrap" id="sparkline"></div>
+            <div class="spark-labels" id="spark-labels"></div>
+            <div style="margin-top:1rem;display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted)">
+                <span>Oldest</span>
+                <span id="trend-direction" style="font-weight:600"></span>
+                <span>Latest</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FILTER ROW -->
+    <div class="filter-row">
+        <button class="filter-btn active" onclick="filterCards('all', this)">All Reviews</button>
+        <button class="filter-btn" onclick="filterCards(5, this)">5 ★</button>
+        <button class="filter-btn" onclick="filterCards(4, this)">4 ★</button>
+        <button class="filter-btn" onclick="filterCards(3, this)">3 ★</button>
+        <button class="filter-btn" onclick="filterCards(2, this)">2 ★</button>
+        <button class="filter-btn" onclick="filterCards(1, this)">1 ★</button>
+        <button class="filter-btn" onclick="filterCards('positive', this)">😊 Positive</button>
+        <button class="filter-btn" onclick="filterCards('negative', this)">😞 Negative</button>
+        <select class="sort-select" onchange="sortCards(this.value)">
+            <option value="default">Newest First</option>
+            <option value="rating-desc">Highest Rated</option>
+            <option value="rating-asc">Lowest Rated</option>
+        </select>
+    </div>
+
+    <!-- FEEDBACK GRID -->
+    <div class="feedback-grid" id="feedback-grid">
+        {% for i in data %}
+        {% with r=i.rating|default:0 %}
+        <div class="feedback-card rating-{{ r|floatformat:"0" }}"
+             data-rating="{{ r }}"
+             data-date="{{ i.date }}"
+             data-order="{{ forloop.counter }}"
+             data-sentiment=""
+             style="animation-delay:{{ forloop.counter0 }}00ms">
+
+            <div class="user-info">
+                <div class="user-avatar">
+                    {% if i.USER.name %}{{ i.USER.name|slice:":1"|upper }}{% else %}U{% endif %}
+                </div>
+                <div>
+                    <div class="user-name">{{ i.USER.name|default:"Anonymous" }}</div>
+                    <div class="user-email">{{ i.USER.email|default:"AI Diet App User" }}</div>
+                </div>
+            </div>
+
+            <div class="card-rating">
+                <div class="stars">
+                    {% if i.rating %}
+                        {% with ri=i.rating|floatformat:"0"|add:"0" %}
+                            {% if ri >= 1 %}<span class="star">★</span>{% endif %}
+                            {% if ri >= 2 %}<span class="star">★</span>{% endif %}
+                            {% if ri >= 3 %}<span class="star">★</span>{% endif %}
+                            {% if ri >= 4 %}<span class="star">★</span>{% endif %}
+                            {% if ri >= 5 %}<span class="star">★</span>{% endif %}
+                            {% if ri < 5 %}<span class="star empty">★</span>{% endif %}
+                            {% if ri < 4 %}<span class="star empty">★</span>{% endif %}
+                            {% if ri < 3 %}<span class="star empty">★</span>{% endif %}
+                            {% if ri < 2 %}<span class="star empty">★</span>{% endif %}
+                            {% if ri < 1 %}<span class="star empty">★</span>{% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <span style="color:var(--muted);font-size:0.8rem;font-style:italic">No rating</span>
+                    {% endif %}
+                </div>
+                {% if i.rating %}<span class="rating-num">{{ i.rating }}/5</span>{% endif %}
+            </div>
+
+            <div class="feedback-text">{{ i.feedback }}</div>
+
+            <div class="card-footer">
+                <span class="feedback-date">📅 {{ i.date }}</span>
+                <span class="sentiment-tag"></span>
+            </div>
+        </div>
+        {% endwith %}
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-state-icon">💬</div>
+            <h3>No Feedback Yet</h3>
+            <p>No feedback has been submitted for this expert.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const cards = [...document.querySelectorAll('#feedback-grid .feedback-card')];
+    const total = cards.length;
+
+    /* ── Collect ratings ── */
+    const ratings = cards.map(c => parseFloat(c.dataset.rating)).filter(r => !isNaN(r) && r > 0);
+
+    /* ── Collect feedback texts ── */
+    const texts = cards.map(c => (c.querySelector('.feedback-text') || {}).textContent || '');
+
+    /* ── Avg ── */
+    const avg = ratings.length ? ratings.reduce((a,b)=>a+b,0) / ratings.length : 0;
+
+    /* ── Word counts ── */
+    const wordCounts = texts.map(t => t.trim().split(/\s+/).filter(Boolean).length);
+    const avgWords   = wordCounts.length ? Math.round(wordCounts.reduce((a,b)=>a+b,0)/wordCounts.length) : 0;
+
+    /* ── Distribution ── */
+    const dist = {1:0,2:0,3:0,4:0,5:0};
+    ratings.forEach(r => { const k = Math.round(r); if (dist[k]!==undefined) dist[k]++; });
+    [1,2,3,4,5].forEach(n => {
+        const pct = total ? (dist[n]/total)*100 : 0;
+        const fill = document.getElementById('dist-fill-'+n);
+        const cnt  = document.getElementById('dist-count-'+n);
+        if (fill) setTimeout(()=>fill.style.width=pct+'%', 400);
+        if (cnt)  cnt.textContent = dist[n];
+    });
+
+    /* ── Satisfaction ── */
+    const satisfied    = ratings.filter(r=>r>=4).length;
+    const satisfiedPct = total ? Math.round((satisfied/total)*100) : 0;
+
+    /* ── Sentiment keyword analysis ── */
+    const POS_KW = ['excellent','great','amazing','wonderful','fantastic','good','helpful','professional',
+        'knowledgeable','recommend','best','happy','satisfied','outstanding','impressed','friendly',
+        'thorough','clear','effective','perfect','awesome','superb','brilliant','caring','attentive',
+        'detailed','expert','love','thank','informative','accurate','responsive','dedicated'];
+    const NEG_KW = ['bad','poor','terrible','awful','horrible','slow','rude','unhelpful','disappointed',
+        'worst','unprofessional','wrong','incorrect','late','missed','ignored','useless','waste',
+        'confusing','unclear','expensive','never','avoid','harsh','dismissive','careless','vague'];
+
+    let posCount=0, negCount=0, neuCount=0;
+    const kwFreq = {};
+
+    cards.forEach(card => {
+        const raw = (card.querySelector('.feedback-text')||{}).textContent||'';
+        const lower = raw.toLowerCase();
+        const sentTag = card.querySelector('.sentiment-tag');
+        let score = 0;
+
+        POS_KW.forEach(kw => { if (lower.includes(kw)) { score++; kwFreq[kw]=(kwFreq[kw]||0)+1; } });
+        NEG_KW.forEach(kw => { if (lower.includes(kw)) { score--; kwFreq[kw]=(kwFreq[kw]||0)+1; } });
+
+        const r = parseFloat(card.dataset.rating);
+        if (!isNaN(r)) { if (r>=4) score++; else if (r<=2) score--; }
+
+        if (score > 0)      { posCount++; card.dataset.sentiment='positive'; sentTag.textContent='😊 Positive'; sentTag.className='sentiment-tag pos'; }
+        else if (score < 0) { negCount++; card.dataset.sentiment='negative'; sentTag.textContent='😞 Negative'; sentTag.className='sentiment-tag neg'; }
+        else                { neuCount++; card.dataset.sentiment='neutral';  sentTag.textContent='😐 Neutral';  sentTag.className='sentiment-tag neu'; }
+    });
+
+    document.getElementById('sent-pos').textContent = posCount;
+    document.getElementById('sent-neu').textContent = neuCount;
+    document.getElementById('sent-neg').textContent = negCount;
+
+    /* ── Keyword cloud ── */
+    const cloud = document.getElementById('keyword-cloud');
+    if (cloud) {
+        const sorted = Object.entries(kwFreq).sort((a,b)=>b[1]-a[1]).slice(0,14);
+        if (sorted.length) {
+            sorted.forEach(([kw, cnt]) => {
+                const p = document.createElement('span');
+                p.className = 'kw-pill ' + (POS_KW.includes(kw) ? 'positive' : 'negative');
+                p.textContent = kw + ' (' + cnt + ')';
+                cloud.appendChild(p);
+            });
+        } else {
+            cloud.innerHTML = '<span style="color:var(--muted);font-size:0.8rem">Not enough data</span>';
+        }
+    }
+
+    /* ── Sparkline ── */
+    const last10 = ratings.slice(-10);
+    const sparkEl = document.getElementById('sparkline');
+    if (sparkEl && last10.length) {
+        const maxR = Math.max(...last10);
+        last10.forEach((r,i) => {
+            const bar = document.createElement('div');
+            bar.className = 'spark-bar';
+            bar.style.height = Math.max(8, (r/maxR)*100) + '%';
+            bar.title = 'Review '+(i+1)+': '+r+'/5';
+            sparkEl.appendChild(bar);
+        });
+        const labelsEl = document.getElementById('spark-labels');
+        if (labelsEl) labelsEl.innerHTML = '<span>1</span><span>'+Math.ceil(last10.length/2)+'</span><span>'+last10.length+'</span>';
+
+        const trendDir = document.getElementById('trend-direction');
+        if (trendDir && last10.length >= 2) {
+            const first = last10.slice(0,Math.ceil(last10.length/2));
+            const last  = last10.slice(Math.floor(last10.length/2));
+            const avgF  = first.reduce((a,b)=>a+b,0)/first.length;
+            const avgL  = last.reduce((a,b)=>a+b,0)/last.length;
+            trendDir.textContent = avgL > avgF+0.1 ? '📈 Improving' : avgL < avgF-0.1 ? '📉 Declining' : '➡️ Stable';
+        }
+    }
+
+    /* ── Trend stat ── */
+    const trendValEl = document.getElementById('trend-val');
+    const trendSubEl = document.getElementById('trend-sub');
+    if (ratings.length >= 2) {
+        const half = Math.floor(ratings.length/2);
+        const a1 = ratings.slice(0,half).reduce((a,b)=>a+b,0)/half;
+        const a2 = ratings.slice(half).reduce((a,b)=>a+b,0)/(ratings.length-half);
+        const d  = a2 - a1;
+        if (trendValEl) { trendValEl.textContent = (d>=0?'+':'')+d.toFixed(2); trendValEl.style.color = d>=0?'var(--accent2)':'var(--danger)'; }
+        if (trendSubEl) trendSubEl.textContent = d>=0 ? 'Improving over time' : 'Needs attention';
+    } else {
+        if (trendValEl) trendValEl.textContent = 'N/A';
+        if (trendSubEl) trendSubEl.textContent = 'Not enough data';
+    }
+
+    /* ── Performance score (weighted) ── */
+    const sentScore   = total ? ((posCount-negCount)/total+1)/2*100 : 50;
+    const perfScore   = ratings.length ? Math.round((avg/5)*60 + satisfiedPct*0.25 + sentScore*0.15) : 0;
+
+    const ringNumEl = document.getElementById('ring-num');
+    if (ringNumEl) ringNumEl.textContent = perfScore;
+    const ringEl = document.getElementById('ring-circle');
+    if (ringEl) {
+        const offset = 175.9 - (perfScore/100)*175.9;
+        setTimeout(() => ringEl.style.strokeDashoffset = offset, 500);
+        ringEl.style.stroke = perfScore>=80?'#34d399':perfScore>=60?'#a78bfa':perfScore>=40?'#f59e0b':'#f87171';
+    }
+
+    /* ── Update banner ── */
+    const avgRatingEl  = document.getElementById('avg-rating');
+    const avgStarsEl   = document.getElementById('avg-stars');
+    const satPctEl     = document.getElementById('satisfaction-pct');
+    const satCntEl     = document.getElementById('satisfied-count');
+    const rqEl         = document.getElementById('response-quality');
+    const awEl         = document.getElementById('avg-words');
+
+    if (avgRatingEl) avgRatingEl.textContent = ratings.length ? avg.toFixed(1) : 'N/A';
+    if (avgStarsEl)  avgStarsEl.textContent  = ratings.length ? '★'.repeat(Math.round(avg))+'☆'.repeat(5-Math.round(avg)) : '–';
+    if (satPctEl)    satPctEl.textContent    = satisfiedPct + '%';
+    if (satCntEl)    satCntEl.textContent    = satisfied + ' of ' + total + ' reviews';
+
+    const quality = avgWords>=30?'Detailed':avgWords>=15?'Moderate':'Brief';
+    if (rqEl) rqEl.textContent = quality;
+    if (awEl) awEl.textContent = avgWords + ' avg words';
+
+    /* ── Grade ── */
+    const gradeLetterEl = document.getElementById('grade-letter');
+    const gradeTitleEl  = document.getElementById('grade-title');
+    const gradeDescEl   = document.getElementById('grade-desc');
+    const gradePillsEl  = document.getElementById('grade-pills');
+
+    let grade, gTitle, gDesc, strengths=[], improvements=[];
+
+    if (!ratings.length) {
+        grade='–'; gTitle='No Data'; gDesc='No rated feedback available to compute a performance grade.';
+    } else if (perfScore>=90) {
+        grade='A+'; gTitle='Exceptional Performance';
+        gDesc='This expert consistently delivers outstanding results. Patient satisfaction is very high and feedback is overwhelmingly positive across all dimensions.';
+        strengths=['High satisfaction','Strong positive sentiment','Top-tier ratings'];
+    } else if (perfScore>=80) {
+        grade='A'; gTitle='Excellent Performance';
+        gDesc='This expert performs at a high level with strong patient satisfaction and predominantly positive feedback. Minor room for improvement.';
+        strengths=['Good avg rating','Mostly positive sentiment']; improvements=['Maintain consistency'];
+    } else if (perfScore>=70) {
+        grade='B'; gTitle='Good Performance';
+        gDesc='This expert performs well overall. Some mixed feedback is present but general outcomes and satisfaction are positive.';
+        strengths=['Above-average rating']; improvements=['Address mixed feedback','Improve communication'];
+    } else if (perfScore>=55) {
+        grade='C'; gTitle='Average Performance';
+        gDesc='Performance meets baseline standards. Feedback patterns indicate several areas with clear opportunity for improvement.';
+        strengths=['Baseline competency']; improvements=['Improve patient communication','Follow up on concerns','Consistency review'];
+    } else if (perfScore>=40) {
+        grade='D'; gTitle='Below Average — Action Recommended';
+        gDesc='Multiple areas of concern have been identified from feedback analysis. Targeted coaching and a structured improvement plan are recommended.';
+        improvements=['Review patient complaints','Communication coaching','Management check-in'];
+    } else {
+        grade='F'; gTitle='Needs Immediate Attention';
+        gDesc='Feedback signals serious concerns across multiple dimensions. Immediate review and intervention is strongly recommended by management.';
+        improvements=['Urgent management review','Address all complaints','Formal improvement plan'];
+    }
+
+    if (gradeLetterEl) {
+        gradeLetterEl.textContent = grade;
+        gradeLetterEl.className   = 'grade-letter ' + grade[0];
+    }
+    if (gradeTitleEl) gradeTitleEl.textContent = gTitle;
+    if (gradeDescEl)  gradeDescEl.textContent  = gDesc;
+    if (gradePillsEl) {
+        strengths.forEach(s => {
+            const p=document.createElement('span'); p.className='grade-pill strength'; p.textContent='✓ '+s; gradePillsEl.appendChild(p);
+        });
+        improvements.forEach(s => {
+            const p=document.createElement('span'); p.className='grade-pill improve'; p.textContent='↑ '+s; gradePillsEl.appendChild(p);
+        });
+    }
+
+});
+
+/* ── Filter ── */
+function filterCards(filter, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#feedback-grid .feedback-card').forEach(card => {
+        let show = filter==='all'
+            || (filter==='positive' && card.dataset.sentiment==='positive')
+            || (filter==='negative' && card.dataset.sentiment==='negative')
+            || (typeof filter==='number' && Math.round(parseFloat(card.dataset.rating))===filter);
+        card.style.display = show ? '' : 'none';
+    });
+}
+
+/* ── Sort ── */
+function sortCards(order) {
+    const grid  = document.getElementById('feedback-grid');
+    const cards = [...grid.querySelectorAll('.feedback-card')];
+    cards.sort((a,b) => {
+        if (order==='rating-desc') return parseFloat(b.dataset.rating||0)-parseFloat(a.dataset.rating||0);
+        if (order==='rating-asc')  return parseFloat(a.dataset.rating||0)-parseFloat(b.dataset.rating||0);
+        return parseInt(a.dataset.order||0)-parseInt(b.dataset.order||0);
+    });
+    cards.forEach(c=>grid.appendChild(c));
+}
+</script>
+
+{% endblock %}

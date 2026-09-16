@@ -1,0 +1,475 @@
+{% extends 'admin/adminhome.html' %} 
+{% block body %}
+
+<div class="reply-dashboard-container">
+    <div class="dashboard-header">
+        <h2 class="dashboard-title">
+            <span class="icon-wrapper">💬</span>
+            Send Reply
+        </h2>
+        <div class="header-decoration"></div>
+    </div>
+
+    <div class="container-fluid p-0">
+        
+        <!-- Stats Card -->
+        <div class="stats-card mb-4">
+            <div class="stats-content">
+                <div class="stats-icon">
+                    <i class="fa fa-reply"></i>
+                </div>
+                <div class="stats-info">
+                    <h3 class="stats-number">1</h3>
+                    <p class="stats-label">Reply Form</p>
+                </div>
+            </div>
+            <div class="stats-decoration"></div>
+        </div>
+
+        <!-- Reply Form Card -->
+        <div class="form-card">
+            <div class="form-card-header">
+                <h5 class="form-card-title">
+                    <i class="fa fa-comment-dots mr-2"></i>
+                    Compose Reply
+                </h5>
+                <div class="header-badge">
+                    <span>Reply to Complaint #{{ data.id }}</span>
+                </div>
+            </div>
+            <div class="form-card-body">
+                <form action="/admin_reply_post" method="post">{% csrf_token %}
+                    <div class="form-container">
+                        <!-- Hidden field for complaint ID -->
+                        <input type="hidden" name="id" value="{{ data.id }}">
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="c" rows="8" placeholder="Enter your detailed reply here..." required></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-lg" name="submit">
+                                <i class="fa fa-paper-plane mr-2"></i>
+                                Submit Reply
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ========================================
+       Modern Reply Dashboard Styles - Blue Lavender Theme
+       ======================================== */
+    
+    :root {
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --success-color: #10b981;
+        --success-dark: #059669;
+        --danger-color: #ef4444;
+        --danger-dark: #dc2626;
+        --warning-color: #f59e0b;
+        --info-color: #3b82f6;
+        --dark-color: #1e293b;
+        --light-bg: #f8fafc;
+        --white: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+        --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+        --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+        --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-fast: all 0.15s ease;
+        --gradient-primary: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        --gradient-reply: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .reply-dashboard-container {
+        padding: 2rem 0;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ========================================
+       Dashboard Header
+       ======================================== */
+    .dashboard-header {
+        position: relative;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1rem;
+    }
+
+    .dashboard-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        animation: slideInLeft 0.6s ease;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: var(--gradient-reply);
+        border-radius: 12px;
+        font-size: 1.5rem;
+        box-shadow: var(--shadow-md);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .header-decoration {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 4px;
+        background: var(--gradient-reply);
+        border-radius: 2px;
+        animation: expandWidth 0.8s ease;
+    }
+
+    @keyframes expandWidth {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100px;
+        }
+    }
+
+    /* ========================================
+       Stats Card
+       ======================================== */
+    .stats-card {
+        position: relative;
+        background: var(--white);
+        border-radius: 16px;
+        padding: 1.75rem 2rem;
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease 0.2s both;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .stats-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stats-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 70px;
+        height: 70px;
+        background: var(--gradient-reply);
+        border-radius: 16px;
+        font-size: 2rem;
+        color: var(--white);
+        box-shadow: var(--shadow-md);
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .stats-info {
+        flex: 1;
+    }
+
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        line-height: 1;
+        animation: countUp 1s ease;
+    }
+
+    @keyframes countUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .stats-label {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        margin: 0.5rem 0 0;
+    }
+
+    .stats-decoration {
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: var(--gradient-reply);
+        opacity: 0.1;
+        border-radius: 50%;
+    }
+
+    /* ========================================
+       Form Card
+       ======================================== */
+    .form-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease 0.4s both;
+    }
+
+    .form-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 2rem;
+        background: var(--gradient-reply);
+        color: var(--white);
+    }
+
+    .form-card-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .header-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+    }
+
+    .form-card-body {
+        padding: 2rem;
+    }
+
+    /* ========================================
+       Form Container
+       ======================================== */
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: var(--transition-base);
+        background: var(--white);
+        color: var(--text-primary);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-control::placeholder {
+        color: #94a3b8;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 2rem;
+        gap: 1rem;
+    }
+
+    .btn-primary {
+        background: var(--gradient-reply);
+        border: none;
+        color: var(--white);
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: var(--transition-base);
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    }
+
+    .btn-primary i {
+        margin-right: 0.5rem;
+    }
+
+    /* ========================================
+       Responsive Design
+       ======================================== */
+    @media (max-width: 768px) {
+        .reply-dashboard-container {
+            padding: 1rem 0;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+        }
+
+        .icon-wrapper {
+            width: 40px;
+            height: 40px;
+            font-size: 1.25rem;
+        }
+
+        .stats-card {
+            padding: 1.25rem;
+        }
+
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+        }
+
+        .form-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+        }
+
+        .form-card-body {
+            padding: 1.5rem;
+        }
+
+        .form-container {
+            padding: 0 1rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn-primary {
+            padding: 1rem;
+        }
+    }
+
+    /* ========================================
+       Scrollbar Styling
+       ======================================== */
+    .form-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .form-container::-webkit-scrollbar-track {
+        background: var(--light-bg);
+        border-radius: 4px;
+    }
+
+    .form-container::-webkit-scrollbar-thumb {
+        background: #6366f1;
+        border-radius: 4px;
+        transition: var(--transition-fast);
+    }
+
+    .form-container::-webkit-scrollbar-thumb:hover {
+        background: #4f46e5;
+    }
+</style>
+
+{% endblock %}

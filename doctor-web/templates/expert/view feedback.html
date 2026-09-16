@@ -1,0 +1,116 @@
+{% extends 'expert/expertindex.html' %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>User Feedback - Doctor Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#14b8a6",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="p-8 space-y-8">
+        <section class="bg-primary rounded-3xl p-10 text-center text-white relative overflow-hidden shadow-xl shadow-primary/20">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+            <div class="relative z-10 space-y-4">
+                <div class="flex justify-center">
+                    <div class="bg-white/20 backdrop-blur-md p-4 rounded-3xl shadow-inner">
+                        <span class="material-icons-round text-5xl">chat</span>
+                    </div>
+                </div>
+                <h2 class="text-4xl font-extrabold tracking-tight">User Feedback</h2>
+                <p class="text-white/80 max-w-lg mx-auto font-medium">See what our users are saying about their experience and help us improve our services.</p>
+                <div class="pt-6">
+                    <div class="inline-flex items-center bg-white dark:bg-slate-900 rounded-full px-6 py-2.5 shadow-lg">
+                        <span class="text-primary font-bold text-lg mr-2">{{ data|length }}</span>
+                        <span class="text-slate-600 dark:text-slate-300 text-sm font-semibold tracking-wide uppercase">Total Reviews</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for i in data %}
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border-l-8 border-primary shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between mb-8">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                            <span class="material-icons-round text-primary">person</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white">{{ i.USER.name }}</h4>
+                            <div class="flex items-center text-emerald-500 dark:text-emerald-400 mt-0.5">
+                                <span class="material-icons-round text-xs mr-1">verified</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider">Trusted source</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900/50 px-4 py-2 rounded-xl flex items-center space-x-3">
+                        <div class="flex text-amber-400">
+                            {% with rating_int=i.rating|floatformat:"0"|add:"0" %}
+                                {% if rating_int >= 1 %}<span class="material-icons-round text-lg">star</span>{% endif %}
+                                {% if rating_int >= 2 %}<span class="material-icons-round text-lg">star</span>{% endif %}
+                                {% if rating_int >= 3 %}<span class="material-icons-round text-lg">star</span>{% endif %}
+                                {% if rating_int >= 4 %}<span class="material-icons-round text-lg">star</span>{% endif %}
+                                {% if rating_int >= 5 %}<span class="material-icons-round text-lg">star</span>{% endif %}
+                                
+                                {% if rating_int < 5 %}<span class="material-icons-round text-lg opacity-30">star</span>{% endif %}
+                                {% if rating_int < 4 %}<span class="material-icons-round text-lg opacity-30">star</span>{% endif %}
+                                {% if rating_int < 3 %}<span class="material-icons-round text-lg opacity-30">star</span>{% endif %}
+                                {% if rating_int < 2 %}<span class="material-icons-round text-lg opacity-30">star</span>{% endif %}
+                                {% if rating_int < 1 %}<span class="material-icons-round text-lg opacity-30">star</span>{% endif %}
+                            {% endwith %}
+                        </div>
+                        <span class="text-slate-900 dark:text-white font-bold text-sm">{{ i.rating }}/5</span>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl relative mb-6 min-h-[100px] flex items-center">
+                    <span class="material-icons-round absolute top-4 left-4 text-primary/20 text-4xl">format_quote</span>
+                    <p class="text-slate-700 dark:text-slate-300 font-medium relative z-10 leading-relaxed italic">{{ i.feedback }}</p>
+                </div>
+                <div class="flex items-center text-slate-400 dark:text-slate-500 text-xs font-semibold">
+                    <span class="material-icons-round text-sm mr-1.5">calendar_today</span>
+                    {{ i.date }}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-1 md:col-span-2 text-center py-16">
+                <div class="text-6xl mb-4">📝</div>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">No Feedback Yet</h3>
+                <p class="text-slate-600 dark:text-slate-400">Be the first to share your experience and help others!</p>
+            </div>
+            {% endfor %}
+        </section>
+    </div>
+</body>
+</html>
+
+{% endblock %}

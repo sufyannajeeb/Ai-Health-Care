@@ -1,0 +1,368 @@
+{% extends 'expert/expertindex.html' %}
+{% block body %}
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal-dark:   #0f766e;
+            --teal:        #14b8a6;
+            --teal-light:  #99f6e4;
+            --teal-pale:   #f0fdfa;
+            --white:       #ffffff;
+            --border:      #ccfbf1;
+            --text:        #134e4a;
+            --muted:       #5eead4;
+            --shadow:      rgba(20, 184, 166, 0.15);
+        }
+
+        body {
+            background-color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text);
+        }
+
+        .page-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px 64px;
+        }
+
+        /* Page heading */
+        .page-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-heading h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--teal-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .page-heading h2 span {
+            color: var(--teal);
+        }
+
+        /* Add New button */
+        .btn-add {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--teal-dark);
+            color: var(--white);
+            text-decoration: none;
+            padding: 10px 22px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            border-radius: 6px;
+            transition: background 0.18s, transform 0.15s;
+        }
+
+        .btn-add:hover {
+            background: var(--teal);
+            color: var(--white);
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+
+        .btn-add::before { content: '+'; font-size: 1.1rem; }
+
+        /* Search bar */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .search-bar input[type="text"] {
+            flex: 1;
+            max-width: 360px;
+            border: 2px solid var(--border);
+            background: var(--white);
+            padding: 10px 16px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.18s;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: var(--teal);
+        }
+
+        .search-bar input[type="text"]::placeholder {
+            color: var(--muted);
+        }
+
+        .btn-search {
+            background: var(--teal);
+            color: var(--white);
+            border: none;
+            padding: 10px 24px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+
+        .btn-search:hover { background: var(--teal-dark); }
+
+        /* Table container */
+        .table-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 24px var(--shadow);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .table-scroll {
+            max-height: 560px;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+
+        table.main-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.83rem;
+            min-width: 1300px;
+        }
+
+        table.main-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        table.main-table thead th {
+            background: var(--teal-dark);
+            color: var(--white);
+            padding: 13px 14px;
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            border-right: 1px solid rgba(255,255,255,0.08);
+        }
+
+        table.main-table thead th:first-child { border-radius: 0; }
+
+        table.main-table tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.12s;
+        }
+
+        table.main-table tbody tr:hover {
+            background: var(--teal-pale);
+        }
+
+        table.main-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        table.main-table td {
+            padding: 11px 14px;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+            color: var(--text);
+        }
+
+        table.main-table td:first-child {
+            font-weight: 700;
+            color: var(--teal);
+            font-size: 0.75rem;
+        }
+
+        table.main-table td img {
+            border-radius: 6px;
+            border: 2px solid var(--border);
+            object-fit: cover;
+        }
+
+        /* Badge-style Yes / No */
+        .badge-yes {
+            display: inline-block;
+            background: #fff1f2;
+            color: #be123c;
+            border: 1.5px solid #fda4af;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.73rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .badge-no {
+            display: inline-block;
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1.5px solid #86efac;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.73rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        /* Action buttons */
+        .btn-edit {
+            display: inline-block;
+            background: var(--teal);
+            color: var(--white);
+            text-decoration: none;
+            padding: 5px 14px;
+            border-radius: 5px;
+            font-size: 0.77rem;
+            font-weight: 600;
+            margin-right: 4px;
+            transition: background 0.15s;
+        }
+
+        .btn-edit:hover {
+            background: var(--teal-dark);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            display: inline-block;
+            background: #ef4444;
+            color: var(--white);
+            text-decoration: none;
+            padding: 5px 14px;
+            border-radius: 5px;
+            font-size: 0.77rem;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .page-heading { flex-direction: column; align-items: flex-start; }
+            .search-bar input[type="text"] { max-width: 100%; }
+        }
+    </style>
+</head>
+
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="page-heading">
+        <h2>Patient Analyze <span>Reports</span></h2>
+        <a href="/add_diet_chart#about" class="btn-add">Add New Record</a>
+    </div>
+
+    <!-- Search -->
+    <form id="form1" name="form1" method="post" action="/View_diet_chart_post">
+        {% csrf_token %}
+        <div class="search-bar">
+            <input type="text" name="textfield" id="textfield" placeholder="Search by name…" />
+            <button type="submit" name="button3" id="button3" class="btn-search">Search</button>
+        </div>
+    </form>
+
+    <!-- Table -->
+    <div class="table-card">
+        <div class="table-scroll">
+            <table class="main-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Diet Chart</th>
+                        <th>BMI</th>
+                        <th>Alcohol Abuse</th>
+                        <th>Allergies</th>
+                        <th>Arthritis</th>
+                        <th>Asthma</th>
+                        <th>Blood Pressure</th>
+                        <th>Cancer</th>
+                        <th>Cholesterol</th>
+                        <th>Depression</th>
+                        <th>Diabetes</th>
+                        <th>Drug Use</th>
+                        <th>Gender</th>
+                        <th>Headaches</th>
+                        <th>Heart Problem</th>
+                        <th>Kidney</th>
+                        <th>Liver</th>
+                        <th>Obesity</th>
+                        <th>Pregnancy</th>
+                        <th>Smoking</th>
+                        <th>Stroke</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.Name }}</td>
+                        <td>{{ i.Date }}</td>
+                        <td><img src="{{ i.Dietplan }}" height="100px" width="100px" alt="Diet Chart Image"></td>
+                        <td>{{ i.bmi }}</td>
+                        <td>{{ i.Alcoholabuse }}</td>
+                        <td>{% if i.Allergies == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Allergies == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Allergies }}{% endif %}</td>
+                        <td>{% if i.Arthritis == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Arthritis == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Arthritis }}{% endif %}</td>
+                        <td>{% if i.Asthma == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Asthma == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Asthma }}{% endif %}</td>
+                        <td>{{ i.Bloodpressure }}</td>
+                        <td>{% if i.Cancer == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Cancer == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Cancer }}{% endif %}</td>
+                        <td>{{ i.Cholestrol }}</td>
+                        <td>{% if i.Depression == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Depression == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Depression }}{% endif %}</td>
+                        <td>{{ i.Diabetes }}</td>
+                        <td>{{ i.Druguse }}</td>
+                        <td>{{ i.Gender }}</td>
+                        <td>{% if i.Headaches == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Headaches == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Headaches }}{% endif %}</td>
+                        <td>{% if i.Heartproblem == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Heartproblem == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Heartproblem }}{% endif %}</td>
+                        <td>{% if i.Kidney == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Kidney == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Kidney }}{% endif %}</td>
+                        <td>{% if i.Liver == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Liver == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Liver }}{% endif %}</td>
+                        <td>{{ i.Obicity }}</td>
+                        <td>{% if i.Pregnancy == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Pregnancy == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Pregnancy }}{% endif %}</td>
+                        <td>{% if i.Smoking == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Smoking == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Smoking }}{% endif %}</td>
+                        <td>{% if i.Stroke == "Yes" %}<span class="badge-yes">Yes</span>{% elif i.Stroke == "No" %}<span class="badge-no">No</span>{% else %}{{ i.Stroke }}{% endif %}</td>
+                        <td>
+                            <a href="/Edit_diet_chart/{{ i.id }}" class="btn-edit">Edit</a>
+                            <a href="/delete_diet_chart/{{ i.id }}" class="btn-delete">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="25" class="empty-state">No records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

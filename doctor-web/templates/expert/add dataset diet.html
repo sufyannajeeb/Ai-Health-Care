@@ -1,0 +1,466 @@
+{% extends 'expert/expertindex.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --teal-dark:  #0f766e;
+        --teal:       #14b8a6;
+        --teal-light: #99f6e4;
+        --teal-pale:  #f0fdfa;
+        --white:      #ffffff;
+        --border:     #ccfbf1;
+        --text:       #134e4a;
+        --muted:      #5eead4;
+        --shadow:     rgba(20, 184, 166, 0.15);
+        --danger:     #ef4444;
+    }
+
+    body {
+        background-color: var(--teal-pale);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text);
+    }
+
+    .add-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 44px 24px 72px;
+    }
+
+    /* Page heading */
+    .page-heading {
+        margin-bottom: 32px;
+        border-left: 4px solid var(--teal);
+        padding-left: 16px;
+    }
+
+    .page-heading .subtitle {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-weight: 600;
+        color: var(--teal);
+        margin-bottom: 4px;
+    }
+
+    .page-heading h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--teal-dark);
+        letter-spacing: -0.02em;
+    }
+
+    /* Form card */
+    .form-card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        box-shadow: 0 6px 28px var(--shadow);
+        overflow: hidden;
+    }
+
+    /* Section label */
+    .form-section {
+        padding: 0 28px 24px;
+    }
+
+    .form-section:first-of-type {
+        padding-top: 28px;
+    }
+
+    .section-label {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-weight: 700;
+        color: var(--teal-dark);
+        background: var(--teal-pale);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 8px 28px;
+        margin: 0 -28px 20px;
+    }
+
+    /* 3-column grid for fields */
+    .field-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .field-grid.two-col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .field-group label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .field-group input[type="text"],
+    .field-group input[type="date"],
+    .field-group input[type="file"],
+    .field-group select {
+        width: 100%;
+        border: 1.5px solid var(--border);
+        border-radius: 7px;
+        background: var(--teal-pale);
+        padding: 9px 13px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.875rem;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.18s, box-shadow 0.18s;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .field-group input:focus,
+    .field-group select:focus {
+        border-color: var(--teal);
+        box-shadow: 0 0 0 3px rgba(20,184,166,0.15);
+        background: var(--white);
+    }
+
+    /* Custom select arrow */
+    .select-wrap {
+        position: relative;
+    }
+
+    .select-wrap::after {
+        content: '▾';
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--teal);
+        font-size: 0.9rem;
+        pointer-events: none;
+    }
+
+    .select-wrap select {
+        padding-right: 32px;
+        cursor: pointer;
+    }
+
+    /* File input */
+    input[type="file"] {
+        cursor: pointer;
+        padding: 7px 10px !important;
+        font-size: 0.82rem !important;
+    }
+
+    /* Footer */
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 28px;
+        border-top: 1px solid var(--border);
+        background: var(--teal-pale);
+    }
+
+    .btn-submit {
+        background: var(--teal-dark);
+        color: var(--white);
+        border: none;
+        padding: 11px 34px;
+        border-radius: 7px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: background 0.18s, transform 0.15s;
+    }
+
+    .btn-submit:hover {
+        background: var(--teal);
+        transform: translateY(-1px);
+    }
+
+    .btn-cancel {
+        background: var(--white);
+        color: var(--danger);
+        border: 1.5px solid #fca5a5;
+        padding: 10px 28px;
+        border-radius: 7px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.18s, border-color 0.18s;
+    }
+
+    .btn-cancel:hover {
+        background: #fff1f2;
+        border-color: var(--danger);
+    }
+
+    @media (max-width: 720px) {
+        .field-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+        .field-grid, .field-grid.two-col { grid-template-columns: 1fr; }
+        .form-footer { flex-direction: column-reverse; }
+        .btn-submit, .btn-cancel { width: 100%; text-align: center; }
+    }
+</style>
+
+<div class="add-wrapper">
+
+    <div class="page-heading">
+        <div class="subtitle">Diet Chart Management</div>
+        <h2>Add New Patient Record</h2>
+    </div>
+
+    <div class="form-card">
+        <form action="/add_diet_chart_post" method="post" enctype="multipart/form-data" name="form1" id="form1">
+            {% csrf_token %}
+
+            <!-- Basic Information -->
+            <div class="form-section">
+                <div class="section-label">Basic Information</div>
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="textfield">Name</label>
+                        <input type="text" name="textfield" id="textfield" required placeholder="Enter full name" />
+                    </div>
+                    <div class="field-group">
+                        <label for="textfield2">Date</label>
+                        <input type="date" name="textfield2" id="textfield2" required />
+                    </div>
+                    <div class="field-group">
+                        <label for="textfield3">Diet Chart</label>
+                        <input type="file" name="fileField3" id="textfield3" required />
+                    </div>
+                    <div class="field-group">
+                        <label for="BMI">BMI</label>
+                        <input type="text" name="BMI" id="BMI" required placeholder="e.g. 24.5" />
+                    </div>
+                    <div class="field-group">
+                        <label for="Gender">Gender</label>
+                        <div class="select-wrap">
+                            <select name="Gender" id="Gender">
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lifestyle Factors -->
+            <div class="form-section">
+                <div class="section-label">Lifestyle Factors</div>
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="Alcoholabuse">Alcohol Abuse</label>
+                        <div class="select-wrap">
+                            <select name="Alcoholabuse" id="Alcoholabuse">
+                                <option>Light or social drinkers</option>
+                                <option>Moderate drinker</option>
+                                <option>Heavy drinkers</option>
+                                <option>No Use</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Druguse">Drug Use</label>
+                        <div class="select-wrap">
+                            <select name="Druguse" id="Druguse">
+                                <option>stimulants</option>
+                                <option>narcotics</option>
+                                <option>sedatives</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Smoking">Smoking</label>
+                        <div class="select-wrap">
+                            <select name="Smoking" id="Smoking">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Pregnancy">Pregnancy</label>
+                        <div class="select-wrap">
+                            <select name="Pregnancy" id="Pregnancy">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clinical Measurements -->
+            <div class="form-section">
+                <div class="section-label">Clinical Measurements</div>
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="Bloodpressure">Blood Pressure</label>
+                        <div class="select-wrap">
+                            <select name="Bloodpressure" id="Bloodpressure">
+                                <option>Low</option>
+                                <option>Normal</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Diabetes">Diabetes</label>
+                        <div class="select-wrap">
+                            <select name="Diabetes" id="Diabetes">
+                                <option>Low</option>
+                                <option>Normal</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Cholestrol">Cholesterol</label>
+                        <div class="select-wrap">
+                            <select name="Cholestrol" id="Cholestrol">
+                                <option>low-density lipoprotein (LDL)</option>
+                                <option>high-density lipoprotein (HDL)</option>
+                                <option>Lipoprotein(a) Cholesterol</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Obicity">Obesity</label>
+                        <div class="select-wrap">
+                            <select name="Obicity" id="Obicity">
+                                <option>Normal</option>
+                                <option>OverWeight</option>
+                                <option>Obesity</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Conditions -->
+            <div class="form-section">
+                <div class="section-label">Medical Conditions</div>
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="Allergies">Allergies</label>
+                        <div class="select-wrap">
+                            <select name="Allergies" id="Allergies">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Arthritis">Arthritis</label>
+                        <div class="select-wrap">
+                            <select name="Arthritis" id="Arthritis">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Asthma">Asthma</label>
+                        <div class="select-wrap">
+                            <select name="Asthma" id="Asthma">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Cancer">Cancer</label>
+                        <div class="select-wrap">
+                            <select name="Cancer" id="Cancer" required>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Depression">Depression</label>
+                        <div class="select-wrap">
+                            <select name="Depression" id="Depression">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Headaches">Headaches</label>
+                        <div class="select-wrap">
+                            <select name="Headaches" id="Headaches">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Heartproblem">Heart Problem</label>
+                        <div class="select-wrap">
+                            <select name="Heartproblem" id="Heartproblem">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Kidney">Kidney</label>
+                        <div class="select-wrap">
+                            <select name="Kidney" id="Kidney">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Liver">Liver</label>
+                        <div class="select-wrap">
+                            <select name="Liver" id="Liver">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="Stroke">Stroke</label>
+                        <div class="select-wrap">
+                            <select name="Stroke" id="Stroke">
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="form-footer">
+                <button type="button" class="btn-cancel" onclick="history.back()">Cancel</button>
+                <button type="submit" name="button" id="button" class="btn-submit">Submit Record</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health - Advanced Medical and Healthcare Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* =================== HEADER / NAV =================== */
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            position: fixed;
+            background: rgba(69, 90, 100, 0.96);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            padding: 0.9rem 0;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            z-index: 101;
+        }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            color: #546E7A;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover { opacity: 0.8; }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 101;
+        }
+
+        .btn-login {
+            padding: 0.7rem 2rem;
+            background: white;
+            color: #546E7A;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 6px;
+            background: none;
+            border: none;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px; height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* Mobile Nav Overlay */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(69, 90, 100, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 99;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-nav.open {
+            display: flex;
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mobile-nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: 700;
+            transition: opacity 0.2s;
+        }
+
+        .mobile-nav a:hover { opacity: 0.7; }
+        .mobile-nav .btn-login { margin-top: 0.5rem; font-size: 1rem; padding: 0.8rem 2.5rem; }
+
+        /* =================== HERO =================== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #546E7A 0%, #78909C 50%, #90A4AE 100%);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            padding-top: 5rem;
+            padding-bottom: 14rem;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content { color: white; }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 4vw, 4rem);
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .hero-description {
+            font-size: clamp(1rem, 1.5vw, 1.1rem);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 500px;
+        }
+
+        .hero-image {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .doctor-patient-image {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+            height: 500px;
+            object-fit: cover;
+        }
+
+        .verification-badge {
+            position: absolute;
+            top: 5%;
+            right: 10%;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            z-index: 3;
+        }
+
+        .doctors-avatars { display: flex; margin-right: 0.5rem; }
+
+        .doctor-avatar {
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-left: -10px;
+            background: #E0E7F0;
+        }
+
+        .doctor-avatar:first-child { margin-left: 0; }
+
+        .badge-info { display: flex; flex-direction: column; }
+        .badge-number { font-size: 1.2rem; font-weight: 700; color: #2D3748; }
+        .badge-label { font-size: 0.75rem; color: #718096; }
+
+        .check-icon {
+            width: 30px; height: 30px;
+            background: #4299E1;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        /* Stats */
+        .stats-section {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem 3rem;
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+        }
+
+        .stat-item { text-align: center; }
+
+        .stat-number {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 700;
+            color: #2D3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label { font-size: 0.9rem; color: #718096; }
+
+        /* =================== COMMON SECTION =================== */
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: #2D3748;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px; height: 4px;
+            background: linear-gradient(90deg, #546E7A, #78909C);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #718096;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* =================== SERVICES =================== */
+        .services {
+            padding: 8rem 0 6rem;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .service-card.visible { opacity: 1; transform: translateY(0); }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 5px;
+            background: linear-gradient(90deg, #546E7A, #78909C);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .service-card:hover::before { transform: scaleX(1); }
+
+        .service-icon {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #546E7A 0%, #78909C 100%);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 20px rgba(84,110,122,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon { transform: translateY(-5px); }
+
+        .service-title { font-size: 1.5rem; font-weight: 700; color: #2D3748; margin-bottom: 1rem; transition: color 0.3s; }
+        .service-card:hover .service-title { color: #546E7A; }
+        .service-description { color: #718096; line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1; }
+
+        .service-link {
+            color: #546E7A; font-weight: 600; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: gap 0.3s;
+        }
+        .service-link:hover { gap: 0.8rem; }
+
+        .service-card:nth-child(1) { transition-delay: 0.1s; }
+        .service-card:nth-child(2) { transition-delay: 0.2s; }
+        .service-card:nth-child(3) { transition-delay: 0.3s; }
+        .service-card:nth-child(4) { transition-delay: 0.4s; }
+        .service-card:nth-child(5) { transition-delay: 0.5s; }
+        .service-card:nth-child(6) { transition-delay: 0.6s; }
+
+        /* =================== ABOUT =================== */
+        .about {
+            padding: 8rem 0;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .about-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.5s ease;
+        }
+
+        .about-image:hover { transform: scale(1.02); }
+
+        .about-image img {
+            width: 100%; height: 400px;
+            object-fit: cover; display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .about-image:hover img { transform: scale(1.05); }
+
+        .about-content h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 800;
+            color: #2D3748;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .about-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px; left: 0;
+            width: 80px; height: 4px;
+            background: linear-gradient(90deg, #546E7A, #78909C);
+            border-radius: 2px;
+        }
+
+        .about-content p { color: #718096; line-height: 1.7; margin-bottom: 1.5rem; font-size: 1.1rem; }
+        .about-features { margin-top: 2.5rem; }
+
+        .about-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: rgba(84,110,122,0.05);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .about-feature.visible { opacity: 1; transform: translateY(0); }
+        .about-feature:hover { background: rgba(84,110,122,0.1); transform: translateX(10px); }
+
+        .feature-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #546E7A 0%, #78909C 100%);
+            border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; flex-shrink: 0; font-size: 1.3rem;
+            box-shadow: 0 5px 15px rgba(84,110,122,0.2);
+            transition: all 0.3s;
+        }
+
+        .about-feature:hover .feature-icon { transform: translateY(-5px); }
+        .feature-text h4 { font-size: 1.2rem; font-weight: 700; color: #2D3748; margin-bottom: 0.5rem; }
+        .feature-text p { color: #718096; font-size: 1rem; margin: 0; line-height: 1.6; }
+
+        .about-feature:nth-child(1) { transition-delay: 0.1s; }
+        .about-feature:nth-child(2) { transition-delay: 0.2s; }
+        .about-feature:nth-child(3) { transition-delay: 0.3s; }
+
+        /* =================== DOCTORS =================== */
+        .doctors {
+            padding: 8rem 0;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doctors-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .doctor-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .doctor-card.visible { opacity: 1; transform: translateY(0); }
+        .doctor-card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+
+        .doctor-image { height: 280px; overflow: hidden; }
+        .doctor-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .doctor-card:hover .doctor-image img { transform: scale(1.05); }
+
+        .doctor-info { padding: 2rem; flex-grow: 1; display: flex; flex-direction: column; }
+        .doctor-name { font-size: 1.4rem; font-weight: 700; color: #2D3748; margin-bottom: 0.5rem; transition: color 0.3s; }
+        .doctor-card:hover .doctor-name { color: #546E7A; }
+        .doctor-specialty { color: #546E7A; font-size: 1rem; font-weight: 600; margin-bottom: 1rem; display: inline-block; padding: 0.3rem 0.8rem; background: rgba(84,110,122,0.1); border-radius: 50px; }
+        .doctor-bio { color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1; }
+        .doctor-social { display: flex; gap: 1rem; }
+
+        .social-link {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(84,110,122,0.1);
+            display: flex; align-items: center; justify-content: center;
+            color: #546E7A;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover { background: #546E7A; color: white; transform: translateY(-5px); }
+
+        .doctor-card:nth-child(1) { transition-delay: 0.1s; }
+        .doctor-card:nth-child(2) { transition-delay: 0.2s; }
+        .doctor-card:nth-child(3) { transition-delay: 0.3s; }
+
+        /* =================== TESTIMONIALS =================== */
+        .testimonials {
+            padding: 8rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonials-container { max-width: 1200px; margin: 0 auto; padding: 0 3rem; }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .testimonial-card.visible { opacity: 1; transform: translateY(0); }
+        .testimonial-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+
+        .testimonial-header {
+            background: linear-gradient(135deg, #546E7A 0%, #78909C 100%);
+            padding: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .testimonial-rating { display: flex; gap: 0.3rem; color: #FFD700; }
+
+        .testimonial-badge {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .testimonial-content { padding: 2rem; flex-grow: 1; display: flex; flex-direction: column; }
+
+        .testimonial-text {
+            color: #718096;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            font-style: italic;
+            position: relative;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            position: absolute;
+            top: -10px; left: -10px;
+            font-size: 3rem;
+            color: rgba(84,110,122,0.1);
+            font-family: Georgia, serif;
+            z-index: -1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .author-avatar {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(84,110,122,0.2);
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .testimonial-card:hover .author-avatar { border-color: #546E7A; }
+        .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .author-info h4 { font-size: 1.1rem; font-weight: 700; color: #2D3748; margin-bottom: 0.2rem; }
+        .author-info p { color: #718096; font-size: 0.9rem; margin: 0; }
+
+        .testimonial-card:nth-child(1) { transition-delay: 0.1s; }
+        .testimonial-card:nth-child(2) { transition-delay: 0.2s; }
+        .testimonial-card:nth-child(3) { transition-delay: 0.3s; }
+
+        /* =================== CONTACT =================== */
+        .contact {
+            padding: 8rem 0;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+        }
+
+        .contact-info h3 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            color: #2D3748;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .contact-info h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px; left: 0;
+            width: 80px; height: 4px;
+            background: linear-gradient(90deg, #546E7A, #78909C);
+            border-radius: 2px;
+        }
+
+        .contact-info > p { color: #718096; line-height: 1.7; margin-bottom: 2rem; font-size: 1.1rem; }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .contact-item.visible { opacity: 1; transform: translateY(0); }
+        .contact-item:hover { transform: translateX(10px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+        .contact-item::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 5px; height: 100%;
+            background: linear-gradient(135deg, #546E7A 0%, #78909C 100%);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item:hover::after { transform: scaleY(1); }
+
+        .contact-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #546E7A 0%, #78909C 100%);
+            border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; flex-shrink: 0; font-size: 1.3rem;
+            box-shadow: 0 5px 15px rgba(84,110,122,0.2);
+            transition: all 0.3s;
+        }
+
+        .contact-item:hover .contact-icon { transform: translateY(-4px); }
+        .contact-text h4 { font-size: 1.2rem; font-weight: 700; color: #2D3748; margin-bottom: 0.5rem; }
+        .contact-text p { color: #718096; font-size: 1rem; margin: 0; line-height: 1.6; }
+
+        .contact-form {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .form-group { margin-bottom: 1.8rem; }
+        .form-group label { display: block; font-size: 1rem; font-weight: 600; color: #2D3748; margin-bottom: 0.8rem; }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #546E7A;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(84,110,122,0.1);
+        }
+
+        textarea.form-control { resize: vertical; min-height: 140px; }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #546E7A 0%, #78909C 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(84,110,122,0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(84,110,122,0.4); }
+
+        .contact-item:nth-child(1) { transition-delay: 0.1s; }
+        .contact-item:nth-child(2) { transition-delay: 0.2s; }
+        .contact-item:nth-child(3) { transition-delay: 0.3s; }
+        .contact-item:nth-child(4) { transition-delay: 0.4s; }
+
+        /* =================== FOOTER =================== */
+        footer {
+            background: #2D3748;
+            color: white;
+            padding: 5rem 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 5px;
+            background: linear-gradient(90deg, #546E7A, #78909C);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            bottom: -8px; left: 0;
+            width: 50px; height: 3px;
+            background: #546E7A;
+            border-radius: 2px;
+        }
+
+        .footer-col > p { color: rgba(255,255,255,0.7); line-height: 1.6; font-size: 0.95rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 1rem; }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .footer-links a:hover { color: white; transform: translateX(5px); }
+
+        .footer-social { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+
+        .footer-social a {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover { background: #546E7A; transform: translateY(-5px); }
+
+        .newsletter-form { display: flex; margin-top: 1rem; }
+
+        .newsletter-form .form-control {
+            border-radius: 50px 0 0 50px;
+            border-right: none;
+            font-size: 0.9rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .newsletter-form .btn-submit {
+            border-radius: 0 50px 50px 0;
+            padding: 0.75rem 1.3rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 2rem 3rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Floating elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(84,110,122,0.1);
+            animation: float 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .element-1 { width: 80px; height: 80px; top: 10%; right: 5%; }
+        .element-2 { width: 120px; height: 120px; bottom: 15%; left: 5%; animation-delay: 1s; }
+        .element-3 { width: 60px; height: 60px; top: 50%; right: 10%; animation-delay: 2s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Fade in */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* =================== RESPONSIVE =================== */
+
+        /* Tablet */
+        @media (max-width: 1024px) {
+            nav { padding: 0 2rem; }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2.5rem;
+                padding: 6rem 2rem 16rem;
+            }
+
+            .hero-description { margin: 0 auto 2rem; }
+            .hero-image { justify-content: center; }
+
+            .doctor-patient-image { max-width: 480px; height: 380px; }
+
+            .verification-badge {
+                right: auto;
+                left: 50%;
+                transform: translateX(-50%);
+                top: auto;
+                bottom: -20px;
+            }
+
+            .stats-section { padding: 2rem; }
+            .stats-container { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+
+            .services-container { padding: 0 2rem; }
+            .about-container { grid-template-columns: 1fr; gap: 3rem; padding: 0 2rem; }
+            .about-image img { height: 320px; }
+            .doctors-container { padding: 0 2rem; }
+            .testimonials-container { padding: 0 2rem; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .contact-container { grid-template-columns: 1fr; gap: 3rem; padding: 0 2rem; }
+            .footer-container { padding: 0 2rem; }
+            .footer-bottom { padding: 2rem 2rem 0; }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            header { padding: 1.2rem 0; }
+            nav { padding: 0 1.5rem; }
+
+            .nav-links { display: none; }
+            .desktop-login { display: none !important; }
+            .hamburger { display: flex; }
+
+            .hero-container { padding: 5rem 1.5rem 18rem; }
+            .doctor-patient-image { max-width: 100%; height: 280px; }
+
+            .stats-section { padding: 1.5rem; }
+            .stats-container { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+
+            .services { padding: 5rem 0 4rem; }
+            .services-container { padding: 0 1.5rem; gap: 1.5rem; grid-template-columns: 1fr; }
+
+            .about { padding: 5rem 0; }
+            .about-container { padding: 0 1.5rem; gap: 2rem; }
+            .about-image img { height: 250px; }
+
+            .doctors { padding: 5rem 0; }
+            .doctors-container { padding: 0 1.5rem; }
+            .doctors-grid { grid-template-columns: 1fr; }
+
+            .testimonials { padding: 5rem 0; }
+            .testimonials-container { padding: 0 1.5rem; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+
+            .contact { padding: 5rem 0; }
+            .contact-container { padding: 0 1.5rem; gap: 2.5rem; }
+            .contact-form { padding: 1.8rem; }
+
+            footer { padding: 4rem 0 2rem; }
+            .footer-container { padding: 0 1.5rem; grid-template-columns: 1fr 1fr; gap: 2rem; }
+            .footer-bottom { padding: 2rem 1.5rem 0; }
+
+            .newsletter-form { flex-direction: column; gap: 0.8rem; }
+            .newsletter-form .form-control { border-radius: 10px; border-right: 1px solid #e2e8f0; }
+            .newsletter-form .btn-submit { border-radius: 10px; width: 100%; justify-content: center; }
+
+            .floating-element { display: none; }
+        }
+
+        /* Small phones */
+        @media (max-width: 480px) {
+            nav { padding: 0 1rem; }
+            .hero-container { padding: 5rem 1rem 20rem; }
+
+            .stats-section { padding: 1.2rem 1rem; }
+            .stats-container { gap: 0.8rem; }
+            .stat-number { font-size: 1.5rem; }
+            .stat-label { font-size: 0.75rem; }
+
+            .services-container,
+            .about-container,
+            .doctors-container,
+            .testimonials-container,
+            .contact-container { padding: 0 1rem; }
+
+            .section-header { padding: 0 1rem; }
+
+            .footer-container { padding: 0 1rem; grid-template-columns: 1fr; }
+            .footer-bottom { padding: 1.5rem 1rem 0; }
+
+            .contact-form { padding: 1.4rem; }
+            .service-card { padding: 2rem; }
+            .verification-badge { padding: 0.8rem 1rem; gap: 0.5rem; }
+            .badge-number { font-size: 1rem; }
+        }
+
+        @media (max-width: 360px) {
+            .hero h1 { font-size: 1.8rem; }
+            .stat-number { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="mainHeader">
+        <nav>
+            <a href="#" class="logo">
+                <div class="logo-icon">⊕</div>
+                AI Health
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#doctors">Doctors</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+                <a href="loginindex" class="desktop-login">
+                    <button class="btn-login">Login</button>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+        <a href="#home" class="mobile-link">Home</a>
+        <a href="#services" class="mobile-link">Services</a>
+        <a href="#about" class="mobile-link">About</a>
+        <a href="#doctors" class="mobile-link">Doctors</a>
+        <a href="#testimonials" class="mobile-link">Testimonials</a>
+        <a href="#contact" class="mobile-link">Contact</a>
+        <a href="loginindex"><button class="btn-login">Login</button></a>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">AI Health</div>
+                <h1>Advanced AI-powered healthcare solutions</h1>
+                <p class="hero-description">
+                    Our AI-driven platform combines cutting-edge technology with compassionate care to provide personalized healthcare solutions for every patient.
+                </p>
+            </div>
+
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
+                     alt="AI healthcare technology"
+                     class="doctor-patient-image">
+
+                <div class="verification-badge">
+                    <div class="doctors-avatars">
+                        <div class="doctor-avatar" style="background: linear-gradient(135deg,#FFB74D 0%,#FFA726 100%);"></div>
+                        <div class="doctor-avatar" style="background: linear-gradient(135deg,#64B5F6 0%,#42A5F5 100%);"></div>
+                        <div class="doctor-avatar" style="background: linear-gradient(135deg,#81C784 0%,#66BB6A 100%);"></div>
+                    </div>
+                    <div class="badge-info">
+                        <div class="badge-number">250K +</div>
+                        <div class="badge-label">Patient Recover</div>
+                    </div>
+                    <div class="check-icon">✓</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="25" data-suffix="+">0</div>
+                    <div class="stat-label">years of experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="98" data-suffix="%">0</div>
+                    <div class="stat-label">patient satisfaction rating</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="10000" data-suffix="">0</div>
+                    <div class="stat-label">patients served annually</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="50" data-suffix="+">0</div>
+                    <div class="stat-label">healthcare providers on staff</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services" id="services">
+        <div class="floating-element element-1"></div>
+        <div class="floating-element element-2"></div>
+        <div class="section-header fade-in">
+            <h2 class="section-title">Our AI-Powered Services</h2>
+            <p class="section-subtitle">We leverage artificial intelligence to provide cutting-edge healthcare solutions tailored to your needs.</p>
+        </div>
+        <div class="services-container">
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-brain"></i></div>
+                <h3 class="service-title">AI Diagnostics</h3>
+                <p class="service-description">Our advanced AI algorithms analyze medical data to provide accurate and early diagnosis, improving treatment outcomes.</p>
+                <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-user-md"></i></div>
+                <h3 class="service-title">Virtual Consultations</h3>
+                <p class="service-description">Connect with healthcare professionals through our AI-enhanced telemedicine platform from the comfort of your home.</p>
+                <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-pills"></i></div>
+                <h3 class="service-title">Personalized Treatment</h3>
+                <p class="service-description">AI-driven personalized treatment plans based on your unique genetic makeup, lifestyle, and medical history.</p>
+                <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-heartbeat"></i></div>
+                <h3 class="service-title">Remote Monitoring</h3>
+                <p class="service-description">Continuous health monitoring through wearable devices and AI analysis to detect potential issues before they become serious.</p>
+                <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-dna"></i></div>
+                <h3 class="service-title">Genomic Analysis</h3>
+                <p class="service-description">Advanced genomic sequencing and analysis powered by AI to identify genetic predispositions and personalized prevention strategies.</p>
+                <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-robot"></i></div>
+                <h3 class="service-title">Health Assistant</h3>
+                <p class="service-description">24/7 AI-powered health assistant to answer your questions, provide health tips, and remind you about medications.</p>
+                <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="about-container">
+            <div class="about-image fade-in">
+                <img src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&q=80" alt="AI Health team">
+            </div>
+            <div class="about-content fade-in">
+                <h2>About AI Health</h2>
+                <p>AI Health is at the forefront of healthcare innovation, combining artificial intelligence with medical expertise to revolutionize patient care. Founded in 2010, we've been dedicated to making healthcare more accessible, accurate, and personalized through technology.</p>
+                <p>Our team of AI specialists, medical professionals, and researchers work together to develop solutions that address the most pressing challenges in healthcare today.</p>
+                <div class="about-features">
+                    <div class="about-feature">
+                        <div class="feature-icon"><i class="fas fa-award"></i></div>
+                        <div class="feature-text">
+                            <h4>Award-Winning Technology</h4>
+                            <p>Recognized globally for our innovative AI healthcare solutions</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="feature-text">
+                            <h4>HIPAA Compliant</h4>
+                            <p>Your health data is secure and protected with industry-leading encryption</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                        <div class="feature-text">
+                            <h4>Global Reach</h4>
+                            <p>Serving patients in over 30 countries with localized healthcare solutions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctors -->
+    <section class="doctors" id="doctors">
+        <div class="floating-element element-3"></div>
+        <div class="section-header fade-in">
+            <h2 class="section-title">Our Expert Team</h2>
+            <p class="section-subtitle">Meet our team of healthcare professionals and AI specialists dedicated to your well-being.</p>
+        </div>
+        <div class="doctors-container">
+            <div class="doctors-grid">
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=80" alt="Dr. Sarah Johnson">
+                    </div>
+                    <div class="doctor-info">
+                        <h3 class="doctor-name">Dr. Sarah Johnson</h3>
+                        <p class="doctor-specialty">Chief Medical Officer & AI Specialist</p>
+                        <p class="doctor-bio">With over 15 years of experience in medical AI research, Dr. Johnson leads our clinical innovation team.</p>
+                        <div class="doctor-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&q=80" alt="Dr. Michael Chen">
+                    </div>
+                    <div class="doctor-info">
+                        <h3 class="doctor-name">Dr. Michael Chen</h3>
+                        <p class="doctor-specialty">Director of AI Research</p>
+                        <p class="doctor-bio">Dr. Chen specializes in machine learning applications for diagnostics and treatment optimization.</p>
+                        <div class="doctor-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&q=80" alt="Dr. James Wilson">
+                    </div>
+                    <div class="doctor-info">
+                        <h3 class="doctor-name">Dr. James Wilson</h3>
+                        <p class="doctor-specialty">Telemedicine Director</p>
+                        <p class="doctor-bio">Dr. Wilson oversees our virtual consultation platform and remote patient monitoring systems.</p>
+                        <div class="doctor-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Patient Testimonials</h2>
+            <p class="section-subtitle">Hear from patients who have experienced the AI Health difference.</p>
+        </div>
+        <div class="testimonials-container">
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <div class="testimonial-badge">Verified Patient</div>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">The AI diagnostics at AI Health detected my condition months before traditional methods would have. The personalized treatment plan has made a tremendous difference in my recovery. I'm truly grateful for this technology and the compassionate care I received.</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar"><img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&q=80" alt="Lisa Thompson"></div>
+                            <div class="author-info"><h4>Lisa Thompson</h4><p>Patient since 2021</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <div class="testimonial-badge">Verified Patient</div>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">As a busy professional, the virtual consultations and remote monitoring have been game-changers. I can receive top-notch medical care without disrupting my work schedule. The AI health assistant also helps me stay on track with my wellness goals.</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Robert Davis"></div>
+                            <div class="author-info"><h4>Robert Davis</h4><p>Patient since 2020</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <div class="testimonial-badge">Verified Patient</div>
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">The genomic analysis provided by AI Health gave me insights into my health that I never would have discovered otherwise. The personalized prevention plan has helped me make lifestyle changes that are already improving my health markers. Highly recommended!</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80" alt="Jennifer Martinez"></div>
+                            <div class="author-info"><h4>Jennifer Martinez</h4><p>Patient since 2022</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-subtitle">Have questions? Reach out to our team for more information.</p>
+        </div>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p>We're here to help with any questions about our AI-powered healthcare services. Contact us using the information below or fill out the form.</p>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="contact-text"><h4>Our Location</h4><p>123 Innovation Drive, Tech City, TC 12345</p></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div class="contact-text"><h4>Phone Number</h4><p>+1 (555) 123-4567</p></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="contact-text"><h4>Email Address</h4><p>info@aihealth.com</p></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-clock"></i></div>
+                    <div class="contact-text"><h4>Working Hours</h4><p>Monday - Friday: 9:00 AM - 6:00 PM</p></div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" class="form-control" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Send Message <i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>AI Health</h4>
+                <p>Revolutionizing healthcare through artificial intelligence and compassionate care.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#doctors">Our Team</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Our Services</h4>
+                <ul class="footer-links">
+                    <li><a href="#">AI Diagnostics</a></li>
+                    <li><a href="#">Virtual Consultations</a></li>
+                    <li><a href="#">Personalized Treatment</a></li>
+                    <li><a href="#">Remote Monitoring</a></li>
+                    <li><a href="#">Genomic Analysis</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Subscribe to our newsletter for the latest updates in AI healthcare.</p>
+                <form id="newsletterForm" class="newsletter-form">
+                    <input type="email" placeholder="Your email" class="form-control" required>
+                    <button type="submit" class="btn-submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AI Health. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ---- Hamburger / Mobile Nav ----
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobileNav');
+
+        hamburger.addEventListener('click', () => {
+            const open = mobileNav.classList.toggle('open');
+            hamburger.classList.toggle('active', open);
+            document.body.style.overflow = open ? 'hidden' : '';
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNav.classList.remove('open');
+                hamburger.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // ---- Header: absolute on hero, becomes fixed+styled after scrolling past hero ----
+        const header = document.getElementById('mainHeader');
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 80) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // ---- Smooth scrolling ----
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    mobileNav.classList.remove('open');
+                    hamburger.classList.remove('active');
+                    document.body.style.overflow = '';
+                    window.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ---- Forms ----
+        document.getElementById('contactForm').addEventListener('submit', e => {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            e.target.reset();
+        });
+
+        document.getElementById('newsletterForm').addEventListener('submit', e => {
+            e.preventDefault();
+            alert('Thank you for subscribing to our newsletter!');
+            e.target.reset();
+        });
+
+        // ---- Scroll animations ----
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll(
+            '.fade-in, .service-card, .doctor-card, .testimonial-card, .contact-item, .about-feature'
+        ).forEach(el => observer.observe(el));
+
+        // ---- Stats counter ----
+        const statsObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = parseInt(el.getAttribute('data-target'));
+                const suffix = el.getAttribute('data-suffix') || '';
+                let count = 0;
+                const increment = Math.max(1, Math.ceil(target / 80));
+                const tick = () => {
+                    count = Math.min(count + increment, target);
+                    el.textContent = (target >= 1000 ? count.toLocaleString() : count) + suffix;
+                    if (count < target) setTimeout(tick, 18);
+                };
+                tick();
+                statsObserver.unobserve(el);
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.stat-number').forEach(el => statsObserver.observe(el));
+    </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+{% extends 'expert/expertindex.html' %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Work Details | Doctor Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0D9488",
+                        secondary: "#0F766E",
+                        "background-light": "#F8FAFC",
+                        "background-dark": "#0F172A",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        /* Exact doc4 radio toggle behaviour */
+        .status-toggle input[type="radio"] { display: none; }
+        .status-toggle input[type="radio"]:checked + label {
+            background-color: #0D9488;
+            color: white;
+            border-color: #0D9488;
+            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.2);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-100 transition-colors duration-200">
+<div class="p-8 max-w-5xl mx-auto w-full">
+
+    <!-- Back button -->
+    <div class="mb-8">
+        <a href="/expert_view_assignedwork"
+           class="flex items-center gap-2 text-slate-500 hover:text-primary transition-colors mb-4 group w-fit">
+            <span class="material-icons transition-transform group-hover:-translate-x-1">arrow_back</span>
+            <span class="text-sm font-medium">Back to All Works</span>
+        </a>
+    </div>
+
+    <!-- Main white card -->
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden border border-slate-100 dark:border-slate-700">
+        <div class="p-8 md:p-12">
+
+            <!-- Title row -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                <div>
+                    {% if work.priority == "High" %}
+                    <span class="bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase mb-3 inline-block">High Priority</span>
+                    {% elif work.priority == "Med" %}
+                    <span class="bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase mb-3 inline-block">Medium Priority</span>
+                    {% endif %}
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white leading-tight">{{ work.work }}</h2>
+                    <p class="text-sm text-slate-400 mt-1">Assigned by Admin</p>
+                </div>
+
+                <div class="flex gap-4 flex-shrink-0">
+                    <div class="text-center bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 min-w-[140px]">
+                        <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Current Status</p>
+                        {% if work.status == "Assigned" %}
+                        <span class="bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-sm font-semibold">Assigned</span>
+                        {% elif work.status == "In Progress" %}
+                        <span class="bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-sm font-semibold">In Progress</span>
+                        {% elif work.status == "Completed" %}
+                        <span class="bg-teal-100 text-teal-700 px-4 py-1.5 rounded-full text-sm font-semibold">Completed</span>
+                        {% endif %}
+                    </div>
+                    <div class="text-center bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 min-w-[140px]">
+                        <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Assigned Date</p>
+                        <span class="text-slate-900 dark:text-white font-bold">{{ work.date }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-12">
+                <div class="flex items-center gap-2 mb-4 border-l-4 border-primary pl-4">
+                    <h3 class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Work Description</h3>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-900/50 p-6 md:p-8 rounded-2xl text-slate-700 dark:text-slate-300 leading-relaxed border border-slate-100 dark:border-slate-700 italic">
+                    {{ work.details }}
+                </div>
+            </div>
+
+            <!-- Status update section -->
+            <div class="bg-teal-50/30 dark:bg-primary/5 rounded-3xl p-8 border border-primary/20">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="bg-primary/10 p-2 rounded-lg">
+                        <span class="material-icons text-primary">edit_note</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white">Update Work Status</h3>
+                </div>
+
+                <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4">Select New Status:</p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
+                        <div class="status-toggle">
+                            <input type="radio" id="status_assigned" name="status" value="Assigned"
+                                   {% if work.status == "Assigned" %}checked{% endif %}/>
+                            <label class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl cursor-pointer hover:border-primary/50 transition-all text-slate-500 dark:text-slate-400"
+                                   for="status_assigned">
+                                <span class="material-icons text-3xl mb-2">assignment_late</span>
+                                <span class="font-bold">Assigned</span>
+                            </label>
+                        </div>
+
+                        <div class="status-toggle">
+                            <input type="radio" id="status_inprogress" name="status" value="In Progress"
+                                   {% if work.status == "In Progress" %}checked{% endif %}/>
+                            <label class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl cursor-pointer hover:border-primary/50 transition-all text-slate-500 dark:text-slate-400"
+                                   for="status_inprogress">
+                                <span class="material-icons text-3xl mb-2">pending</span>
+                                <span class="font-bold">In Progress</span>
+                            </label>
+                        </div>
+
+                        <div class="status-toggle">
+                            <input type="radio" id="status_completed" name="status" value="Completed"
+                                   {% if work.status == "Completed" %}checked{% endif %}/>
+                            <label class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl cursor-pointer hover:border-primary/50 transition-all text-slate-500 dark:text-slate-400"
+                                   for="status_completed">
+                                <span class="material-icons text-3xl mb-2">check_circle</span>
+                                <span class="font-bold">Completed</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" name="update_status"
+                                class="bg-primary hover:bg-secondary text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-primary/30 transition-all hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2">
+                            <span>Submit Update</span>
+                            <span class="material-icons text-sm">send</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 flex justify-center">
+        <div class="flex items-center gap-2 text-slate-400 text-xs">
+            <span class="material-icons text-sm">lock</span>
+            <span>Encrypted Medical Record Data</span>
+            <span class="mx-2">•</span>
+            <span>Last Updated: just now</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- FAB scroll to top -->
+<div class="fixed bottom-8 right-8">
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+            class="w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
+        <span class="material-icons">expand_less</span>
+    </button>
+</div>
+
+</body>
+</html>
+
+{% endblock %}

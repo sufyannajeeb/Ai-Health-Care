@@ -1,0 +1,234 @@
+{% extends 'expert/expertindex.html' %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Assigned Works | Doctor Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0d9488",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        sans: ["'Plus Jakarta Sans'", "sans-serif"],
+                        display: ["'Plus Jakarta Sans'", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                        'xl': '16px',
+                        '2xl': '24px',
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .card-glow { box-shadow: 0 0 20px -5px rgba(13, 148, 136, 0.2); }
+        body {
+            background-image: radial-gradient(circle at 50% 50%, rgba(13, 148, 136, 0.05) 0%, transparent 50%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .task-card { transition: all 0.3s ease; cursor: pointer; }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.1);
+        }
+        .task-card-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .task-card-link:hover { color: inherit; text-decoration: none; }
+        .progress-bar { transition: width 1s ease-in-out; }
+        .priority-high  { background-color: #FEF3C7; color: #92400E; }
+        .priority-med   { background-color: #DBEAFE; color: #1E40AF; }
+        .status-assigned    { background-color: #E0F2FE; color: #0369A1; }
+        .status-in-progress { background-color: #C7D2FE; color: #3730A3; }
+        .status-completed   { background-color: #D1FAE5; color: #065F46; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-sans">
+<div class="p-8 max-w-7xl mx-auto">
+
+    <!-- ===== HEADER ===== -->
+    <div class="mb-10 flex items-start justify-between">
+        <div>
+            <div class="flex items-center gap-4 mb-2">
+                <div class="w-14 h-14 bg-primary text-white rounded-2xl flex items-center justify-center shadow-xl shadow-teal-500/20">
+                    <span class="material-icons-round text-3xl">task_alt</span>
+                </div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Assigned Works</h2>
+            </div>
+            <p class="text-slate-500 dark:text-slate-400">Track and manage professional tasks assigned by the administration team.</p>
+        </div>
+       
+    </div>
+
+    <!-- ===== STAT CARDS ===== -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+        <!-- Total: data|length works reliably in Django -->
+        <div class="glass card-glow p-6 rounded-2xl flex items-center gap-5">
+            <div class="w-14 h-14 bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 rounded-xl flex items-center justify-center">
+                <span class="material-icons-round text-3xl">list_alt</span>
+            </div>
+            <div>
+                <p class="text-4xl font-extrabold">{{ data|length }}</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-500 opacity-80">Total Tasks</p>
+            </div>
+        </div>
+
+        <!-- Assigned: populated by JS counting data-status="Assigned" in the list -->
+        <div class="glass card-glow p-6 rounded-2xl flex items-center gap-5">
+            <div class="w-14 h-14 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center">
+                <span class="material-icons-round text-3xl">pending_actions</span>
+            </div>
+            <div>
+                <p class="text-4xl font-extrabold" id="stat-assigned">0</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-500 opacity-80">Assigned</p>
+            </div>
+        </div>
+
+        <!-- Completed: populated by JS counting data-status="Completed" in the list -->
+        <div class="glass card-glow p-6 rounded-2xl flex items-center gap-5">
+            <div class="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center">
+                <span class="material-icons-round text-3xl">verified</span>
+            </div>
+            <div>
+                <p class="text-4xl font-extrabold" id="stat-completed">0</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-500 opacity-80">Completed</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TASK LIST ===== -->
+    <div class="glass p-1 rounded-2xl overflow-hidden shadow-2xl">
+        <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <h3 class="font-bold text-lg">Task Queue</h3>
+            <div class="flex gap-2">
+                <button class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">Recent</button>
+                <button class="p-2 text-slate-500"><span class="material-icons-round">filter_list</span></button>
+            </div>
+        </div>
+
+        <div class="divide-y divide-slate-100 dark:divide-slate-800">
+            {% if data %}
+            {% for i in data %}
+            <a href="/expert_view_work_details/{{ i.id }}/" class="task-card-link">
+                <div class="task-card p-6 hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all">
+                    <div class="flex items-center justify-between">
+
+                        <!-- Left: icon + title + assigned by -->
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center ring-2 ring-primary/20 text-primary">
+                                <span class="material-symbols-outlined text-2xl">corporate_fare</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">{{ i.work }}</h4>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Assigned by Admin</p>
+                            </div>
+                        </div>
+
+                        <!-- Right: progress + date + badges + arrow -->
+                        <div class="flex items-center gap-6">
+
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs text-slate-400">PROGRESS</span>
+                                <div class="w-32 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="bg-gradient-to-r from-primary to-teal-600 h-full rounded-half progress-bar" style="width: {{ i.progress }}%"></div>
+                                </div>
+                                <span class="text-xs font-bold text-teal-600">{{ i.progress }}%</span>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-icons-round text-sm text-slate-400">calendar_today</span>
+                                    <span class="text-xs text-slate-500">{{ i.date }}</span>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    {% if i.priority == "High" %}
+                                    <span class="priority-high px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">HIGH PRIORITY</span>
+                                    {% elif i.priority == "Med" %}
+                                    <span class="priority-med px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">MED PRIORITY</span>
+                                    {% endif %}
+
+                                    <!-- data-status used by JS to count stats -->
+                                    {% if i.status == "Assigned" %}
+                                    <span class="status-assigned px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" data-status="Assigned">ASSIGNED</span>
+                                    {% elif i.status == "In Progress" %}
+                                    <span class="status-in-progress px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" data-status="In Progress">IN PROGRESS</span>
+                                    {% elif i.status == "Completed" %}
+                                    <span class="status-completed px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" data-status="Completed">COMPLETED</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/10 transition-all">
+                                    <span class="material-icons-round">chevron_right</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="p-16 text-center">
+                <div class="text-6xl mb-4">📝</div>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">No Assigned Works</h3>
+                <p class="text-slate-600 dark:text-slate-400">You'll see tasks here once assigned</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="p-4 bg-slate-50/50 dark:bg-slate-900/50 text-center border-t border-slate-200 dark:border-slate-800">
+            <button class="text-sm font-bold text-primary hover:underline">View All Task History</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var badges = document.querySelectorAll("[data-status]");
+        var assigned = 0, completed = 0;
+
+        badges.forEach(function (el) {
+            var s = el.getAttribute("data-status");
+            if (s === "Assigned")  assigned++;
+            if (s === "Completed") completed++;
+        });
+
+        document.getElementById("stat-assigned").textContent  = assigned;
+        document.getElementById("stat-completed").textContent = completed;
+    });
+</script>
+
+</body>
+</html>
+
+{% endblock %}

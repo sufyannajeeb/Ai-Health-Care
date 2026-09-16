@@ -1,0 +1,722 @@
+{% extends "expert_base.html" %}
+
+{% block title %}Medical Dashboard - HealthCare AI Expert{% endblock %}
+{% block breadcrumb %}Dashboard / Medical Overview{% endblock %}
+
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+
+<style>
+    /* ── Base ── */
+    .db-wrap * { box-sizing: border-box; }
+    .db-wrap { font-family: 'Inter', sans-serif; }
+
+    /* ── Glass helpers ── */
+    .glass {
+        background: rgba(255,255,255,0.60);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.30);
+    }
+    .glass-intense {
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.40);
+    }
+
+    /* ── Hero ── */
+    .hero-gradient {
+        background: linear-gradient(135deg, #199c8a 0%, #0d9488 100%);
+        border-radius: 2.5rem;
+        padding: 56px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(13,148,136,0.30);
+        margin-bottom: 32px;
+    }
+    .hero-gradient .blob1 {
+        position: absolute;
+        right: -80px; top: -80px;
+        width: 320px; height: 320px;
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(20px);
+        border-radius: 50%;
+        animation: floating 8s ease-in-out infinite;
+    }
+    .hero-gradient .blob2 {
+        position: absolute;
+        right: 160px; bottom: -50px;
+        width: 256px; height: 256px;
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(20px);
+        border-radius: 2.5rem;
+        transform: rotate(45deg);
+        animation: floating 6s ease-in-out infinite;
+    }
+    @keyframes floating {
+        0%,100% { transform: translate(0,0px); }
+        50%      { transform: translate(0,15px); }
+    }
+    .hero-inner {
+        position: relative; z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+    }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.20);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.20);
+        padding: 6px 16px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    .hero-title {
+        font-size: clamp(28px,4vw,48px);
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        line-height: 1.15;
+        margin-bottom: 14px;
+    }
+    .hero-sub {
+        font-size: 16px;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.85);
+        max-width: 600px;
+        font-weight: 300;
+    }
+    /* Avatar stack */
+    .avatar-stack { display: flex; }
+    .av {
+        width: 48px; height: 48px;
+        border-radius: 50%;
+        border: 3px solid white;
+        margin-left: -14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px; font-weight: 800;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        color: white;
+    }
+    .av:first-child { margin-left: 0; }
+    .av-1 { background: linear-gradient(135deg,#FFD700,#FFE5B4); color: #8B4513; }
+    .av-2 { background: linear-gradient(135deg,#4FC3F7,#B4E5FF); color: #01579B; }
+    .av-3 { background: linear-gradient(135deg,#FF80AB,#FFB4E5); color: #880E4F; }
+    .av-m { background: rgba(255,255,255,0.30); backdrop-filter: blur(10px); }
+
+    /* ── Stat Cards ── */
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    .stat-card {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgb(205, 193, 193);
+        border-radius: 2rem;
+        padding: 24px;
+        transition: all .3s ease;
+    }
+    .stat-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.08); transform: translateY(-4px); }
+    .stat-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 28px;
+    }
+    .stat-icon {
+        width: 56px; height: 56px;
+        border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .stat-icon .material-icons-round { font-size: 28px; }
+    .stat-badge {
+        display: flex; align-items: center; gap: 4px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 11px; font-weight: 800;
+    }
+    .stat-badge .material-icons-round { font-size: 13px; }
+    .stat-val { font-size: 44px; font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 4px; }
+    .stat-lbl { font-size: 14px; font-weight: 500; color: #64748b; }
+    .stat-bar {
+        margin-top: 24px;
+        height: 6px;
+        background: rgba(0,0,0,0.06);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+    .stat-fill { height: 100%; border-radius: 999px; }
+    .stat-meta {
+        margin-top: 10px;
+        font-size: 10px; font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase; letter-spacing: .1em;
+        display: flex; align-items: center; gap: 4px;
+    }
+    .stat-meta .material-icons-round { font-size: 13px; color: #0d9488; }
+
+    /* colour tokens per card */
+    .sc-blue  .stat-icon { background: rgba(59,130,246,.12);  color: #3B82F6; }
+    .sc-blue  .stat-badge { background: rgba(13,148,136,.1);  color: #0d9488; }
+    .sc-blue  .stat-fill  { background: #3B82F6; box-shadow: 0 0 10px rgba(59,130,246,.4); }
+    .sc-blue  .stat-val   { color: #1e293b; }
+
+    .sc-teal  .stat-icon { background: rgba(13,148,136,.12);  color: #0d9488; }
+    .sc-teal  .stat-badge { background: rgba(100,116,139,.1); color: #64748b; }
+    .sc-teal  .stat-fill  { background: #0d9488; box-shadow: 0 0 10px rgba(13,148,136,.4); }
+    .sc-teal  .stat-val   { color: #1e293b; }
+
+    .sc-purple .stat-icon { background: rgba(139,92,246,.12); color: #8B5CF6; }
+    .sc-purple .stat-badge { background: rgba(13,148,136,.1); color: #0d9488; }
+    .sc-purple .stat-fill  { background: #8B5CF6; box-shadow: 0 0 10px rgba(139,92,246,.4); }
+    .sc-purple .stat-val   { color: #1e293b; }
+
+    .sc-amber  .stat-icon { background: rgba(245,158,11,.12); color: #F59E0B; }
+    .sc-amber  .stat-badge { background: rgba(13,148,136,.1); color: #0d9488; }
+    .sc-amber  .stat-fill  { background: #F59E0B; box-shadow: 0 0 10px rgba(245,158,11,.4); }
+    .sc-amber  .stat-val   { color: #1e293b; }
+
+    /* ── Middle Grid ── */
+    .mid-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    @media(max-width:1024px){ .mid-grid { grid-template-columns: 1fr; } }
+
+    .glass-panel {
+        background: rgba(255,255,255,0.60);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.30);
+        border-radius: 2.5rem;
+        padding: 32px;
+    }
+    .panel-title {
+        font-size: 18px; font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 28px;
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    .tab-pills { display: flex; gap: 8px; }
+    .tab-pill {
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 11px; font-weight: 800;
+        background: rgba(255,255,255,0.50);
+        border: 1px solid rgba(255,255,255,0.30);
+        cursor: pointer;
+    }
+    .tab-pill.active { background: #0d9488; color: white; border-color: #0d9488; }
+
+    /* Bar chart */
+    .bar-chart {
+        height: 220px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 0 8px;
+    }
+    .bar-col { flex: 1; border-radius: 12px 12px 0 0; transition: all .3s ease; cursor: pointer; }
+    .bar-col:hover { filter: brightness(1.1); }
+    .bar-col.active { background: rgba(13,148,136,0.6) !important; }
+    .bar-labels {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 8px 0;
+        font-size: 10px; font-weight: 700;
+        color: #94a3b8; text-transform: uppercase; letter-spacing: .1em;
+    }
+
+    /* Consultations list */
+    .consult-item {
+        display: flex; align-items: center; gap: 14px;
+        padding: 4px 0;
+        transition: all .2s ease;
+    }
+    .consult-item + .consult-item { margin-top: 20px; }
+    .consult-item:hover { transform: translateX(4px); }
+    .consult-avatar {
+        position: relative; flex-shrink: 0;
+    }
+    .consult-avatar img {
+        width: 48px; height: 48px;
+        border-radius: 14px; object-fit: cover;
+        border: 2px solid rgba(13,148,136,.2);
+        transition: border-color .2s ease;
+    }
+    .consult-item:hover .consult-avatar img { border-color: #0d9488; }
+    .dot {
+        position: absolute; bottom: -3px; right: -3px;
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        border: 2px solid white;
+    }
+    .dot-green  { background: #22c55e; }
+    .dot-orange { background: #f97316; }
+    .dot-grey   { background: #94a3b8; }
+    .consult-info { flex: 1; }
+    .consult-name { font-size: 14px; font-weight: 700; color: #1e293b; }
+    .consult-detail { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+    .consult-btn {
+        width: 38px; height: 38px;
+        background: rgba(255,255,255,0.40);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.30);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        color: #0d9488;
+        cursor: pointer;
+        transition: all .2s ease;
+        text-decoration: none;
+    }
+    .consult-btn:hover { background: #0d9488; color: white; }
+    .consult-cta {
+        width: 100%; margin-top: 28px;
+        padding: 14px;
+        background: #0d9488; color: white;
+        font-weight: 700; font-size: 14px;
+        border-radius: 18px;
+        border: none; cursor: pointer;
+        box-shadow: 0 8px 20px rgba(13,148,136,.30);
+        transition: all .3s ease;
+    }
+    .consult-cta:hover { box-shadow: 0 12px 28px rgba(13,148,136,.45); transform: translateY(-2px); }
+
+    /* Quick Actions */
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+    .action-card {
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        padding: 36px 24px;
+        border-radius: 2rem;
+        text-decoration: none;
+        transition: all .3s ease;
+        color: white;
+        position: relative; overflow: hidden;
+    }
+    .action-card::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: rgba(255,255,255,0);
+        transition: background .3s ease;
+    }
+    .action-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+    .action-card:hover::after { background: rgba(255,255,255,0.08); }
+    .ac-1 { background: linear-gradient(135deg,#3B82F6,#2563EB); box-shadow: 0 8px 24px rgba(59,130,246,.3); }
+    .ac-2 { background: linear-gradient(135deg,#10B981,#059669); box-shadow: 0 8px 24px rgba(16,185,129,.3); }
+    .ac-3 { background: linear-gradient(135deg,#8B5CF6,#7C3AED); box-shadow: 0 8px 24px rgba(139,92,246,.3); }
+    .ac-4 { background: linear-gradient(135deg,#F59E0B,#D97706); box-shadow: 0 8px 24px rgba(245,158,11,.3); }
+    .action-icon { font-size: 44px; margin-bottom: 14px; transition: transform .3s ease; }
+    .action-card:hover .action-icon { transform: scale(1.12) rotate(-4deg); }
+    .action-title { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+    .action-sub { font-size: 13px; color: rgba(255,255,255,0.85); }
+
+    /* Activity */
+    .activity-list { display: flex; flex-direction: column; gap: 14px; }
+    .activity-item {
+        display: flex; align-items: center; gap: 18px;
+        padding: 18px 20px;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.40);
+        background: rgba(255,255,255,0.40);
+        transition: all .25s ease;
+    }
+    .activity-item:hover { transform: translateX(4px); background: rgba(255,255,255,0.70); }
+    .act-icon {
+        width: 56px; height: 56px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; color: white;
+    }
+    .act-icon .material-icons-round { font-size: 26px; }
+    .act-title { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+    .act-desc  { font-size: 13px; color: #64748b; line-height: 1.5; }
+    .act-time  { font-size: 12px; font-weight: 600; color: #94a3b8; white-space: nowrap; }
+    .act-badge {
+        padding: 5px 12px; border-radius: 999px;
+        font-size: 10px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: .05em;
+        white-space: nowrap;
+    }
+    .badge-active   { background:#D1FAE5; color:#065F46; }
+    .badge-reviewed { background:#FEF3C7; color:#92400E; }
+    .badge-new      { background:#DBEAFE; color:#1E3A8A; }
+    .badge-done     { background:#D1FAE5; color:#065F46; }
+
+    /* Bottom split */
+    .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 32px;
+    }
+    @media(max-width:768px){ .bottom-grid { grid-template-columns: 1fr; } }
+
+    /* Performance items */
+    .perf-list { display: flex; flex-direction: column; gap: 12px; }
+    .perf-item {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 18px;
+        border-radius: 16px;
+        transition: transform .2s ease;
+    }
+    .perf-item:hover { transform: scale(1.02); }
+    .perf-left { display: flex; align-items: center; gap: 12px; }
+    .perf-icon { font-size: 24px; }
+    .perf-lbl { font-size: 14px; font-weight: 600; color: #334155; }
+    .perf-val { font-size: 26px; font-weight: 800; letter-spacing: -1px; }
+    .pi-1 { background: linear-gradient(135deg,#DBEAFE,#EFF6FF); }
+    .pi-1 .perf-icon,.pi-1 .perf-val { color: #3B82F6; }
+    .pi-2 { background: linear-gradient(135deg,#FEF3C7,#FFFBEB); }
+    .pi-2 .perf-icon,.pi-2 .perf-val { color: #F59E0B; }
+    .pi-3 { background: linear-gradient(135deg,#EDE9FE,#F5F3FF); }
+    .pi-3 .perf-icon,.pi-3 .perf-val { color: #8B5CF6; }
+    .pi-4 { background: linear-gradient(135deg,#D1FAE5,#ECFDF5); }
+    .pi-4 .perf-icon,.pi-4 .perf-val { color: #10B981; }
+
+    /* Tips */
+    .tips-list { display: flex; flex-direction: column; gap: 12px; }
+    .tip-item {
+        padding: 18px 20px;
+        border-radius: 16px;
+        border-left: 4px solid;
+        transition: transform .25s ease;
+    }
+    .tip-item:hover { transform: translateX(4px); }
+    .tip-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .tip-icon { font-size: 22px; }
+    .tip-title { font-size: 15px; font-weight: 700; }
+    .tip-desc { font-size: 13px; color: #64748b; line-height: 1.6; }
+    .ti-1 { background: linear-gradient(135deg,#DBEAFE,#EFF6FF); border-color:#3B82F6; }
+    .ti-1 .tip-icon,.ti-1 .tip-title { color:#1E3A8A; }
+    .ti-2 { background: linear-gradient(135deg,#D1FAE5,#ECFDF5); border-color:#10B981; }
+    .ti-2 .tip-icon,.ti-2 .tip-title { color:#065F46; }
+    .ti-3 { background: linear-gradient(135deg,#FEF3C7,#FFFBEB); border-color:#F59E0B; }
+    .ti-3 .tip-icon,.ti-3 .tip-title { color:#92400E; }
+    .ti-4 { background: linear-gradient(135deg,#EDE9FE,#F5F3FF); border-color:#8B5CF6; }
+    .ti-4 .tip-icon,.ti-4 .tip-title { color:#5B21B6; }
+
+    /* Shared card wrapper */
+    .g-card {
+        background: rgba(255,255,255,0.60);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.30);
+        border-radius: 2rem;
+        padding: 32px;
+        margin-bottom: 0;
+    }
+    .g-card-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .g-card-title {
+        display: flex; align-items: center; gap: 12px;
+        font-size: 20px; font-weight: 800; color: #1e293b;
+    }
+    .g-card-icon {
+        width: 44px; height: 44px;
+        background: rgba(13,148,136,0.10);
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .g-card-icon .material-icons-round { color: #0d9488; font-size: 22px; }
+    .g-card-action {
+        display: flex; align-items: center; gap: 6px;
+        color: #0d9488; font-size: 14px; font-weight: 700;
+        text-decoration: none; transition: gap .2s ease;
+    }
+    .g-card-action:hover { gap: 10px; }
+
+    @media(max-width:768px){
+        .hero-gradient { padding: 32px 24px; border-radius: 1.5rem; }
+        .hero-inner { flex-direction: column; }
+        .stat-grid { grid-template-columns: 1fr; }
+        .actions-grid { grid-template-columns: 1fr; }
+        .activity-item { flex-wrap: wrap; }
+    }
+</style>
+
+<div class="db-wrap">
+
+    <!-- ══ HERO ══ -->
+    <section class="hero-gradient">
+        <div class="blob1"></div>
+        <div class="blob2"></div>
+        <div class="hero-inner">
+            <div>
+                <div class="hero-badge">
+                    <span class="material-icons-round" style="font-size:16px">verified</span>
+                    Certified Expert Dashboard
+                </div>
+                <h2 class="hero-title">Welcome Back, Dr. {{ expert_name|default:"Expert" }}! 👋</h2>
+                <p class="hero-sub">Your comprehensive medical dashboard for managing patient care, diet plans, and health consultations. Monitor your practice performance with AI-driven insights.</p>
+            </div>
+            <div class="avatar-stack">
+                <div class="av av-1">JS</div>
+                <div class="av av-2">RK</div>
+                <div class="av av-3">MW</div>
+                <div class="av av-m">+12</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ STAT CARDS ══ -->
+    <div class="stat-grid">
+
+        <div class="stat-card sc-blue">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <span class="material-icons-round">pending_actions</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="material-icons-round">trending_up</span>
+                    {{ assignments_increase|default:"0" }}%
+                </div>
+            </div>
+            <div class="stat-val">{{ active_assignments|default:"0" }}</div>
+            <div class="stat-lbl">Active Assignments</div>
+            <div class="stat-bar">
+                <div class="stat-fill" style="width:{{ assignment_percentage|default:70 }}%"></div>
+            </div>
+            <div class="stat-meta">
+                <span class="material-icons-round">arrow_upward</span>
+                {{ assignments_increase|default:"0" }}% increase this week
+            </div>
+        </div>
+
+        <div class="stat-card sc-teal">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <span class="material-icons-round">person_search</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="material-icons-round">person_add</span>
+                    +{{ new_patients|default:"0" }}
+                </div>
+            </div>
+            <div class="stat-val">{{ total_patients|default:"0" }}</div>
+            <div class="stat-lbl">Total Patients</div>
+            <div class="stat-bar">
+                <div class="stat-fill" style="width:{{ patient_percentage|default:40 }}%"></div>
+            </div>
+            <div class="stat-meta">
+                <span class="material-icons-round">arrow_upward</span>
+                {{ new_patients|default:"0" }} new patients
+            </div>
+        </div>
+
+        <div class="stat-card sc-purple">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <span class="material-icons-round">description</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="material-icons-round">check_circle</span>
+                    {{ today_diet_plans|default:"0" }} today
+                </div>
+            </div>
+            <div class="stat-val">{{ total_diet_plans|default:"0" }}</div>
+            <div class="stat-lbl">Patient Records</div>
+            <div class="stat-bar">
+                <div class="stat-fill" style="width:{{ diet_percentage|default:75 }}%"></div>
+            </div>
+            <div class="stat-meta">
+                <span class="material-icons-round">arrow_upward</span>
+                {{ today_diet_plans|default:"0" }} completed today
+            </div>
+        </div>
+
+        <div class="stat-card sc-amber">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <span class="material-icons-round">star</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="material-icons-round">thumb_up</span>
+                    {{ rating_quality|default:"Excellent" }}
+                </div>
+            </div>
+            <div class="stat-val">{{ average_rating|default:"—" }}</div>
+            <div class="stat-lbl">Average Rating</div>
+            <div class="stat-bar">
+                <div class="stat-fill" style="width:{{ rating_percentage|default:90 }}%"></div>
+            </div>
+            <div class="stat-meta">
+                <span class="material-icons-round">arrow_upward</span>
+                {{ rating_quality|default:"Excellent" }} feedback
+            </div>
+        </div>
+
+    </div>
+
+   
+
+    <!-- ══ QUICK ACTIONS ══ -->
+    <div class="g-card" style="margin-bottom:32px">
+        <div class="g-card-header">
+            <div class="g-card-title">
+                <div class="g-card-icon"><span class="material-icons-round">bolt</span></div>
+                Quick Medical Actions
+            </div>
+        </div>
+        <div class="actions-grid">
+            <a href="/expert_view_assignedwork" class="action-card ac-1">
+                <span class="material-icons-round action-icon">assignment</span>
+                <div class="action-title">View Assignments</div>
+                <div class="action-sub">Manage your tasks</div>
+            </a>
+            <a href="/View_diet_chart" class="action-card ac-2">
+                <span class="material-icons-round action-icon">restaurant_menu</span>
+                <div class="action-title">Diet Plans</div>
+                <div class="action-sub">Create &amp; manage</div>
+            </a>
+            <a href="/expertview_user" class="action-card ac-3">
+                <span class="material-icons-round action-icon">groups</span>
+                <div class="action-title">Patient List</div>
+                <div class="action-sub">View all patients</div>
+            </a>
+            <a href="/expert_view_feedback" class="action-card ac-4">
+                <span class="material-icons-round action-icon">feedback</span>
+                <div class="action-title">Feedbacks</div>
+                <div class="action-sub">Review ratings</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- ══ RECENT ACTIVITY ══ -->
+    <div class="g-card" style="margin-bottom:32px">
+        <div class="g-card-header">
+            <div class="g-card-title">
+                <div class="g-card-icon"><span class="material-icons-round">history</span></div>
+                Recent Medical Activity
+            </div>
+            <a href="/expert_view_assignedwork" class="g-card-action">
+                View All <span class="material-icons-round" style="font-size:18px">arrow_forward</span>
+            </a>
+        </div>
+        <div class="activity-list">
+            {% for activity in activities %}
+            <div class="activity-item">
+                <div class="act-icon" style="background:linear-gradient(135deg,{% if activity.type == 'assignment' %}#3B82F6,#2563EB{% else %}#10B981,#059669{% endif %})">
+                    <span class="material-icons-round">{{ activity.icon }}</span>
+                </div>
+                <div style="flex:1">
+                    <div class="act-title">{{ activity.title }}</div>
+                    <div class="act-desc">{{ activity.description }}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                    <div class="act-time">{{ activity.time }}</div>
+                    <div class="act-badge badge-{{ activity.status|lower }}">{{ activity.status }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ══ PERFORMANCE + TIPS ══ -->
+    <div class="bottom-grid">
+
+        <div class="g-card">
+            <div class="g-card-header">
+                <div class="g-card-title">
+                    <div class="g-card-icon"><span class="material-icons-round">analytics</span></div>
+                    This Week's Performance
+                </div>
+            </div>
+            <div class="perf-list">
+                <div class="perf-item pi-1">
+                    <div class="perf-left">
+                        <span class="material-icons-round perf-icon">check_circle</span>
+                        <span class="perf-lbl">Completed Works</span>
+                    </div>
+                    <div class="perf-val">{{ week_completed|default:"—" }}</div>
+                </div>
+                <div class="perf-item pi-2">
+                    <div class="perf-left">
+                        <span class="material-icons-round perf-icon">schedule</span>
+                        <span class="perf-lbl">Pending Works</span>
+                    </div>
+                    <div class="perf-val">{{ week_pending|default:"—" }}</div>
+                </div>
+                <div class="perf-item pi-3">
+                    <div class="perf-left">
+                        <span class="material-icons-round perf-icon">forum</span>
+                        <span class="perf-lbl">New Feedbacks</span>
+                    </div>
+                    <div class="perf-val">{{ week_feedbacks|default:"—" }}</div>
+                </div>
+                <div class="perf-item pi-4">
+                    <div class="perf-left">
+                        <span class="material-icons-round perf-icon">restaurant</span>
+                        <span class="perf-lbl">Diet Charts</span>
+                    </div>
+                    <div class="perf-val">{{ week_diet_charts|default:"—" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="g-card">
+            <div class="g-card-header">
+                <div class="g-card-title">
+                    <div class="g-card-icon"><span class="material-icons-round">lightbulb</span></div>
+                    Medical Tips &amp; Guidelines
+                </div>
+            </div>
+            <div class="tips-list">
+                <div class="tip-item ti-1">
+                    <div class="tip-hd">
+                        <span class="material-icons-round tip-icon">health_and_safety</span>
+                        <span class="tip-title">Patient Care Priority</span>
+                    </div>
+                    <div class="tip-desc">Regular check-ups with assigned patients ensure better health outcomes.</div>
+                </div>
+                <div class="tip-item ti-2">
+                    <div class="tip-hd">
+                        <span class="material-icons-round tip-icon">monitor_heart</span>
+                        <span class="tip-title">Monitor Health Metrics</span>
+                    </div>
+                    <div class="tip-desc">Track patient vitals and progress regularly through diet plans.</div>
+                </div>
+                <div class="tip-item ti-3">
+                    <div class="tip-hd">
+                        <span class="material-icons-round tip-icon">notifications_active</span>
+                        <span class="tip-title">Stay Updated</span>
+                    </div>
+                    <div class="tip-desc">Review new assignments daily and respond to patient feedback promptly.</div>
+                </div>
+                <div class="tip-item ti-4">
+                    <div class="tip-hd">
+                        <span class="material-icons-round tip-icon">verified</span>
+                        <span class="tip-title">Quality Care</span>
+                    </div>
+                    <div class="tip-desc">Maintain high-quality service to achieve excellent patient satisfaction.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div><!-- /db-wrap -->
+
+{% endblock %}

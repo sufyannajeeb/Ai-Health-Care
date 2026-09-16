@@ -1,0 +1,471 @@
+{% extends 'expert/expertindex.html' %}
+{% block body %}
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --teal-dark:  #0f766e;
+        --teal:       #14b8a6;
+        --teal-light: #99f6e4;
+        --teal-pale:  #f0fdfa;
+        --white:      #ffffff;
+        --border:     #ccfbf1;
+        --text:       #134e4a;
+        --muted:      #5eead4;
+        --shadow:     rgba(20, 184, 166, 0.15);
+        --danger:     #ef4444;
+    }
+
+    body {
+        background-color: var(--teal-pale);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text);
+    }
+
+    .edit-wrapper {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 44px 24px 72px;
+    }
+
+    /* Page heading */
+    .page-heading {
+        margin-bottom: 32px;
+        border-left: 4px solid var(--teal);
+        padding-left: 16px;
+    }
+
+    .page-heading .subtitle {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-weight: 600;
+        color: var(--teal);
+        margin-bottom: 4px;
+    }
+
+    .page-heading h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--teal-dark);
+        letter-spacing: -0.02em;
+    }
+
+    /* Form card */
+    .form-card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        box-shadow: 0 6px 28px var(--shadow);
+        overflow: hidden;
+    }
+
+    /* Section divider inside card */
+    .form-section {
+        padding: 0 28px 24px;
+    }
+
+    .form-section:first-of-type {
+        padding-top: 28px;
+    }
+
+    .section-label {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-weight: 700;
+        color: var(--teal-dark);
+        background: var(--teal-pale);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 8px 28px;
+        margin: 0 -28px 20px;
+    }
+
+    /* Field row */
+    .field-row {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .field-row label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .field-row input[type="text"],
+    .field-row input[type="date"],
+    .field-row input[type="number"],
+    .field-row input[type="file"],
+    .field-row select {
+        width: 100%;
+        border: 1.5px solid var(--border);
+        border-radius: 7px;
+        background: var(--teal-pale);
+        padding: 9px 13px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.88rem;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.18s, box-shadow 0.18s;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .field-row input:focus,
+    .field-row select:focus {
+        border-color: var(--teal);
+        box-shadow: 0 0 0 3px rgba(20,184,166,0.15);
+        background: var(--white);
+    }
+
+    /* Custom select arrow */
+    .select-wrap {
+        position: relative;
+    }
+
+    .select-wrap::after {
+        content: '▾';
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--teal);
+        font-size: 0.9rem;
+        pointer-events: none;
+    }
+
+    .select-wrap select {
+        padding-right: 32px;
+    }
+
+    /* File input */
+    input[type="file"] {
+        cursor: pointer;
+        padding: 7px 10px;
+        font-size: 0.82rem;
+    }
+
+    /* Footer buttons */
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 28px;
+        border-top: 1px solid var(--border);
+        background: var(--teal-pale);
+    }
+
+    .btn-submit {
+        background: var(--teal-dark);
+        color: var(--white);
+        border: none;
+        padding: 11px 34px;
+        border-radius: 7px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: background 0.18s, transform 0.15s;
+    }
+
+    .btn-submit:hover {
+        background: var(--teal);
+        transform: translateY(-1px);
+    }
+
+    .btn-cancel {
+        background: var(--white);
+        color: var(--danger);
+        border: 1.5px solid #fca5a5;
+        padding: 10px 28px;
+        border-radius: 7px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.18s, border-color 0.18s;
+    }
+
+    .btn-cancel:hover {
+        background: #fff1f2;
+        border-color: var(--danger);
+    }
+
+    @media (max-width: 540px) {
+        .field-row { grid-template-columns: 1fr; gap: 5px; }
+        .form-footer { flex-direction: column-reverse; }
+        .btn-submit, .btn-cancel { width: 100%; text-align: center; }
+    }
+</style>
+
+<div class="edit-wrapper">
+
+    <div class="page-heading">
+        <div class="subtitle">Diet Chart Management</div>
+        <h2>Edit Patient Record</h2>
+    </div>
+
+    <div class="form-card">
+        <form action="/Edit_diet_chart_post" method="post" enctype="multipart/form-data" name="form1" id="form1">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ data.id }}">
+
+            <!-- Basic Info -->
+            <div class="form-section">
+                <div class="section-label">Basic Information</div>
+
+                <div class="field-row">
+                    <label for="textfield">Name</label>
+                    <input type="text" name="textfield" id="textfield" value="{{ data.Name }}" />
+                </div>
+
+                <div class="field-row">
+                    <label for="textfield2">Date</label>
+                    <input type="date" name="textfield2" id="textfield2" value="{{ data.Date|date:'Y-m-d' }}" />
+                </div>
+
+                <div class="field-row">
+                    <label for="textfield3">Diet Chart</label>
+                    <input type="file" name="fileField3" id="textfield3" />
+                </div>
+
+                <div class="field-row">
+                    <label for="BMI">BMI</label>
+                    <input type="text" name="BMI" id="BMI" value="{{ data.bmi }}" />
+                </div>
+
+                <div class="field-row">
+                    <label for="Gender">Gender</label>
+                    <div class="select-wrap">
+                        <select name="Gender" id="Gender">
+                            <option {% if data.Gender == "Male" %}selected{% endif %}>Male</option>
+                            <option {% if data.Gender == "Female" %}selected{% endif %}>Female</option>
+                            <option {% if data.Gender == "Other" %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lifestyle -->
+            <div class="form-section">
+                <div class="section-label">Lifestyle Factors</div>
+
+                <div class="field-row">
+                    <label for="Alcoholabuse">Alcohol Abuse</label>
+                    <div class="select-wrap">
+                        <select name="Alcoholabuse" id="Alcoholabuse">
+                            <option {% if data.Alcoholabuse == "Light or social drinkers" %}selected{% endif %}>Light or social drinkers</option>
+                            <option {% if data.Alcoholabuse == "Moderate drinker" %}selected{% endif %}>Moderate drinker</option>
+                            <option {% if data.Alcoholabuse == "Heavy drinkers" %}selected{% endif %}>Heavy drinkers</option>
+                            <option {% if data.Alcoholabuse == "No Use" %}selected{% endif %}>No Use</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Druguse">Drug Use</label>
+                    <div class="select-wrap">
+                        <select name="Druguse" id="Druguse">
+                            <option {% if data.Druguse == "stimulants" %}selected{% endif %}>stimulants</option>
+                            <option {% if data.Druguse == "narcotics" %}selected{% endif %}>narcotics</option>
+                            <option {% if data.Druguse == "sedatives" %}selected{% endif %}>sedatives</option>
+                            <option {% if data.Druguse == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Smoking">Smoking</label>
+                    <div class="select-wrap">
+                        <select name="Smoking" id="Smoking">
+                            <option {% if data.Smoking == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Smoking == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Pregnancy">Pregnancy</label>
+                    <div class="select-wrap">
+                        <select name="Pregnancy" id="Pregnancy">
+                            <option {% if data.Pregnancy == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Pregnancy == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clinical Measurements -->
+            <div class="form-section">
+                <div class="section-label">Clinical Measurements</div>
+
+                <div class="field-row">
+                    <label for="Bloodpressure">Blood Pressure</label>
+                    <div class="select-wrap">
+                        <select name="Bloodpressure" id="Bloodpressure">
+                            <option {% if data.Bloodpressure == "Low" %}selected{% endif %}>Low</option>
+                            <option {% if data.Bloodpressure == "Normal" %}selected{% endif %}>Normal</option>
+                            <option {% if data.Bloodpressure == "High" %}selected{% endif %}>High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Diabetes">Diabetes</label>
+                    <div class="select-wrap">
+                        <select name="Diabetes" id="Diabetes">
+                            <option {% if data.Diabetes == "Low" %}selected{% endif %}>Low</option>
+                            <option {% if data.Diabetes == "Normal" %}selected{% endif %}>Normal</option>
+                            <option {% if data.Diabetes == "High" %}selected{% endif %}>High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Cholestrol">Cholesterol</label>
+                    <div class="select-wrap">
+                        <select name="Cholestrol" id="Cholestrol">
+                            <option {% if data.Cholestrol == "low-density lipoprotein (LDL)" %}selected{% endif %}>low-density lipoprotein (LDL)</option>
+                            <option {% if data.Cholestrol == "high-density lipoprotein (HDL)" %}selected{% endif %}>high-density lipoprotein (HDL)</option>
+                            <option {% if data.Cholestrol == "Lipoprotein(a) Cholesterol" %}selected{% endif %}>Lipoprotein(a) Cholesterol</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Obicity">Obesity</label>
+                    <div class="select-wrap">
+                        <select name="Obicity" id="Obicity">
+                            <option {% if data.Obicity == "Normal" %}selected{% endif %}>Normal</option>
+                            <option {% if data.Obicity == "OverWeight" %}selected{% endif %}>OverWeight</option>
+                            <option {% if data.Obicity == "Obicity" %}selected{% endif %}>Obicity</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Conditions -->
+            <div class="form-section">
+                <div class="section-label">Medical Conditions</div>
+
+                <div class="field-row">
+                    <label for="Allergies">Allergies</label>
+                    <div class="select-wrap">
+                        <select name="Allergies" id="Allergies">
+                            <option {% if data.Allergies == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Allergies == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Arthritis">Arthritis</label>
+                    <div class="select-wrap">
+                        <select name="Arthritis" id="Arthritis">
+                            <option {% if data.Arthritis == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Arthritis == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Asthma">Asthma</label>
+                    <div class="select-wrap">
+                        <select name="Asthma" id="Asthma">
+                            <option {% if data.Asthma == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Asthma == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Cancer">Cancer</label>
+                    <div class="select-wrap">
+                        <select name="Cancer" id="Cancer">
+                            <option {% if data.Cancer == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Cancer == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Depression">Depression</label>
+                    <div class="select-wrap">
+                        <select name="Depression" id="Depression">
+                            <option {% if data.Depression == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Depression == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Headaches">Headaches</label>
+                    <div class="select-wrap">
+                        <select name="Headaches" id="Headaches">
+                            <option {% if data.Headaches == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Headaches == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Heartproblem">Heart Problem</label>
+                    <div class="select-wrap">
+                        <select name="Heartproblem" id="Heartproblem">
+                            <option {% if data.Heartproblem == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Heartproblem == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Kidney">Kidney</label>
+                    <div class="select-wrap">
+                        <select name="Kidney" id="Kidney">
+                            <option {% if data.Kidney == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Kidney == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Liver">Liver</label>
+                    <div class="select-wrap">
+                        <select name="Liver" id="Liver">
+                            <option {% if data.Liver == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Liver == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <label for="Stroke">Stroke</label>
+                    <div class="select-wrap">
+                        <select name="Stroke" id="Stroke">
+                            <option {% if data.Stroke == "Yes" %}selected{% endif %}>Yes</option>
+                            <option {% if data.Stroke == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="form-footer">
+                <button type="button" class="btn-cancel" onclick="history.back()">Cancel</button>
+                <button type="submit" name="button" id="button" class="btn-submit">Save Changes</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

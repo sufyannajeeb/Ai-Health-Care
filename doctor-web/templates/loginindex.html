@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Health - Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+:root {
+--primary-color: #546E7A;
+--secondary-color: #78909C;
+--accent-color: #90A4AE;
+--light-color: #f8f9fa;
+--text-color: #333;
+--glass-bg: rgba(255, 255, 255, 0.1);
+--glass-border: rgba(255, 255, 255, 0.2);
+--success-color: #4CAF50;
+--error-color: #F44336;
+}
+
+body {
+font-family: 'Inter', sans-serif;
+overflow-x: hidden;
+color: var(--text-color);
+background: var(--light-color);
+transition: all 0.3s ease;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+--primary-color: #455A64;
+--secondary-color: #546E7A;
+--accent-color: #78909C;
+--light-color: #263238;
+--text-color: #ECEFF1;
+--glass-bg: rgba(38, 50, 56, 0.7);
+--glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* Header/Navigation */
+header {
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+z-index: 100;
+padding: 1.5rem 0;
+transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+nav {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 3rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.logo {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+color: white;
+font-size: 1.5rem;
+font-weight: 700;
+text-decoration: none;
+transition: all 0.3s ease;
+}
+
+.logo:hover {
+transform: scale(1.05);
+}
+
+.logo-icon {
+width: 32px;
+height: 32px;
+background: white;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.4rem;
+color: var(--primary-color);
+transition: all 0.3s ease;
+animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+0% {
+box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+}
+70% {
+box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+}
+100% {
+box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+}
+
+.logo:hover .logo-icon {
+transform: rotate(15deg) scale(1.1);
+box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.nav-spacer {
+flex-grow: 1;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+background: var(--glass-bg);
+border: 1px solid var(--glass-border);
+border-radius: 50px;
+width: 50px;
+height: 26px;
+position: relative;
+cursor: pointer;
+transition: all 0.3s ease;
+backdrop-filter: blur(10px);
+}
+
+.theme-toggle-slider {
+position: absolute;
+top: 3px;
+left: 3px;
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background: white;
+transition: all 0.3s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.theme-toggle-slider i {
+font-size: 12px;
+color: var(--primary-color);
+}
+
+body.dark-mode .theme-toggle-slider {
+transform: translateX(24px);
+}
+
+/* Hero Section */
+.hero {
+position: relative;
+min-height: 100vh;
+background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
+display: flex;
+align-items: center;
+overflow: hidden;
+transition: all 0.5s ease;
+}
+
+.hero::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect fill="rgba(255,255,255,0.03)" width="100" height="100"/></svg>');
+opacity: 0.4;
+}
+
+/* Particle Background */
+.particles {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+overflow: hidden;
+z-index: 0;
+}
+
+.particle {
+position: absolute;
+display: block;
+background: rgba(255, 255, 255, 0.2);
+border-radius: 50%;
+animation: float-up linear infinite;
+}
+
+@keyframes float-up {
+to {
+transform: translateY(-100vh) rotate(360deg);
+opacity: 0;
+}
+}
+
+.hero-container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 3rem;
+width: 100%;
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 4rem;
+align-items: center;
+position: relative;
+z-index: 1;
+}
+
+.hero-content {
+color: white;
+animation: fadeInLeft 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInLeft {
+from {
+opacity: 0;
+transform: translateX(-50px);
+}
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
+
+.hero-badge {
+display: inline-block;
+padding: 0.5rem 1rem;
+background: var(--glass-bg);
+backdrop-filter: blur(10px);
+border-radius: 50px;
+font-size: 0.85rem;
+margin-bottom: 1.5rem;
+font-weight: 500;
+transition: all 0.3s ease;
+border: 1px solid var(--glass-border);
+}
+
+.hero-badge:hover {
+transform: translateY(-3px);
+background: rgba(255, 255, 255, 0.2);
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero h1 {
+font-size: 3.5rem;
+line-height: 1.15;
+margin-bottom: 1.5rem;
+font-weight: 700;
+background: linear-gradient(to right, #ffffff, #e0e0e0);
+-webkit-background-clip: text;
+background-clip: text;
+color: transparent;
+transition: all 0.5s ease;
+overflow: hidden;
+position: relative;
+}
+
+.hero h1::after {
+content: '|';
+position: absolute;
+right: 0;
+width: auto;
+height: 100%;
+color: white;
+animation: blink 1s infinite;
+}
+
+@keyframes blink {
+0%, 100% { opacity: 1; }
+50% { opacity: 0; }
+}
+
+.hero h1:hover {
+transform: translateY(-5px);
+text-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hero-description {
+font-size: 1.1rem;
+line-height: 1.6;
+margin-bottom: 2rem;
+opacity: 0.95;
+max-width: 500px;
+transition: all 0.3s ease;
+}
+
+.hero-description:hover {
+opacity: 1;
+transform: translateY(-3px);
+}
+
+/* Login Form */
+.login-form-container {
+background: var(--glass-bg);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border-radius: 20px;
+padding: 3rem;
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+animation: slideUp 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+position: relative;
+overflow: hidden;
+transition: all 0.4s ease;
+border: 1px solid var(--glass-border);
+}
+
+@keyframes slideUp {
+from {
+opacity: 0;
+transform: translateY(50px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.login-form-container::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 5px;
+background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+.login-form-container::after {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+opacity: 0;
+transition: opacity 0.5s ease;
+pointer-events: none;
+}
+
+.login-form-container:hover::after {
+opacity: 1;
+}
+
+.form-title {
+font-size: 2rem;
+font-weight: 700;
+color: var(--text-color);
+margin-bottom: 0.5rem;
+text-align: center;
+transition: all 0.3s ease;
+}
+
+.form-subtitle {
+color: var(--text-color);
+opacity: 0.7;
+text-align: center;
+margin-bottom: 2rem;
+transition: all 0.3s ease;
+}
+
+.form-group {
+margin-bottom: 1.5rem;
+position: relative;
+transition: all 0.3s ease;
+}
+
+.form-group:hover {
+transform: translateY(-3px);
+}
+
+.form-control {
+width: 100%;
+padding: 1rem 1rem 1rem 3rem;
+border: 1px solid var(--glass-border);
+border-radius: 10px;
+font-size: 1rem;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+background: var(--glass-bg);
+color: var(--text-color);
+position: relative;
+z-index: 1;
+}
+
+.form-control:focus {
+outline: none;
+border-color: var(--primary-color);
+background: rgba(255, 255, 255, 0.2);
+box-shadow: 0 0 20px rgba(84, 110, 122, 0.3);
+transform: translateY(-2px);
+}
+
+.form-control::placeholder {
+color: rgba(255, 255, 255, 0.6);
+}
+
+.input-icon {
+position: absolute;
+left: 1rem;
+top: 50%;
+transform: translateY(-50%);
+color: rgba(255, 255, 255, 0.7);
+transition: all 0.3s ease;
+z-index: 2;
+}
+
+.form-group:focus-within .input-icon {
+color: var(--primary-color);
+transform: translateY(-50%) scale(1.1);
+}
+
+.text-right {
+text-align: right;
+}
+
+.mb-3 {
+margin-bottom: 1rem;
+}
+
+.forgot-password {
+color: var(--text-color);
+text-decoration: none;
+font-size: 0.9rem;
+transition: all 0.3s ease;
+display: inline-block;
+opacity: 0.8;
+}
+
+.forgot-password:hover {
+text-decoration: underline;
+transform: translateX(3px);
+opacity: 1;
+}
+
+.btn-login {
+width: 100%;
+padding: 1rem;
+background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+color: white;
+border: none;
+border-radius: 10px;
+font-size: 1rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+box-shadow: 0 5px 15px rgba(84, 110, 122, 0.3);
+margin-bottom: 1.5rem;
+position: relative;
+overflow: hidden;
+}
+
+.btn-login::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+transition: left 0.5s;
+}
+
+.btn-login:hover::before {
+left: 100%;
+}
+
+.btn-login:hover {
+background: linear-gradient(135deg, #455A64 0%, var(--primary-color) 100%);
+transform: translateY(-3px);
+box-shadow: 0 8px 20px rgba(84, 110, 122, 0.4);
+}
+
+.btn-login:active {
+transform: translateY(-1px);
+}
+
+/* Ripple Effect */
+.ripple {
+position: absolute;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.5);
+transform: scale(0);
+animation: ripple-animation 0.6s ease-out;
+}
+
+@keyframes ripple-animation {
+to {
+transform: scale(4);
+opacity: 0;
+}
+}
+
+/* Loading State */
+.btn-login.loading {
+position: relative;
+color: transparent;
+pointer-events: none;
+}
+
+.btn-login.loading::after {
+content: '';
+position: absolute;
+width: 20px;
+height: 20px;
+top: 50%;
+left: 50%;
+margin-left: -10px;
+margin-top: -10px;
+border: 2px solid rgba(255, 255, 255, 0.3);
+border-top-color: white;
+border-radius: 50%;
+animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+
+/* Password Strength Indicator */
+.password-strength {
+height: 5px;
+background: rgba(255, 255, 255, 0.2);
+border-radius: 5px;
+margin-top: 0.5rem;
+overflow: hidden;
+}
+
+.password-strength-meter {
+height: 100%;
+width: 0;
+border-radius: 5px;
+transition: all 0.3s ease;
+}
+
+.strength-weak {
+width: 33%;
+background: #f44336;
+}
+
+.strength-medium {
+width: 66%;
+background: #ff9800;
+}
+
+.strength-strong {
+width: 100%;
+background: #4caf50;
+}
+
+.password-strength-text {
+font-size: 0.75rem;
+margin-top: 0.25rem;
+color: rgba(255, 255, 255, 0.7);
+}
+
+/* Floating elements animation */
+@keyframes float {
+0%, 100% {
+transform: translateY(0) rotate(0deg);
+}
+50% {
+transform: translateY(-20px) rotate(5deg);
+}
+}
+
+.floating-element {
+position: absolute;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.1);
+animation: float 6s ease-in-out infinite;
+z-index: 0;
+transition: all 0.3s ease;
+}
+
+.floating-element:hover {
+transform: scale(1.2);
+background: rgba(255, 255, 255, 0.15);
+}
+
+.element-1 {
+width: 80px;
+height: 80px;
+top: 10%;
+right: 5%;
+animation-delay: 0s;
+}
+
+.element-2 {
+width: 120px;
+height: 120px;
+bottom: 15%;
+left: 5%;
+animation-delay: 1s;
+}
+
+.element-3 {
+width: 60px;
+height: 60px;
+top: 50%;
+right: 10%;
+animation-delay: 2s;
+}
+
+/* Morphing background gradient */
+.morphing-gradient {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color), #B0BEC5);
+background-size: 400% 400%;
+z-index: -1;
+animation: gradient 15s ease infinite;
+opacity: 0.7;
+}
+
+@keyframes gradient {
+0% {
+background-position: 0% 50%;
+}
+50% {
+background-position: 100% 50%;
+}
+100% {
+background-position: 0% 50%;
+}
+}
+
+/* Floating Action Button */
+.fab {
+position: fixed;
+bottom: 30px;
+right: 30px;
+width: 60px;
+height: 60px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.5rem;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+cursor: pointer;
+z-index: 1000;
+transition: all 0.3s ease;
+}
+
+.fab:hover {
+transform: scale(1.1);
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Help Modal */
+.help-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 2000;
+opacity: 0;
+visibility: hidden;
+transition: all 0.3s ease;
+}
+
+.help-modal.active {
+opacity: 1;
+visibility: visible;
+}
+
+.help-content {
+background: var(--glass-bg);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border-radius: 20px;
+padding: 2rem;
+max-width: 500px;
+width: 90%;
+border: 1px solid var(--glass-border);
+transform: scale(0.8);
+transition: all 0.3s ease;
+}
+
+.help-modal.active .help-content {
+transform: scale(1);
+}
+
+.help-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1.5rem;
+}
+
+.help-title {
+font-size: 1.5rem;
+font-weight: 700;
+color: var(--text-color);
+}
+
+.close-btn {
+background: none;
+border: none;
+font-size: 1.5rem;
+color: var(--text-color);
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+transform: rotate(90deg);
+}
+
+.help-text {
+color: var(--text-color);
+opacity: 0.8;
+line-height: 1.6;
+margin-bottom: 1.5rem;
+}
+
+.help-contact {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+}
+
+.contact-item {
+display: flex;
+align-items: center;
+gap: 1rem;
+color: var(--text-color);
+text-decoration: none;
+transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+transform: translateX(5px);
+}
+
+.contact-icon {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: var(--glass-bg);
+display: flex;
+align-items: center;
+justify-content: center;
+border: 1px solid var(--glass-border);
+}
+
+/* Time-based background */
+.time-morning {
+background: linear-gradient(135deg, #072a3aff 0%, #78909C 50%, #90A4AE 100%);
+}
+
+.time-afternoon {
+background: linear-gradient(135deg, #13658bff 0%, #78909C 50%, #90A4AE 100%);
+}
+
+.time-evening {
+background: linear-gradient(135deg, #072a3aff 0%, #78909C 50%, #90A4AE 100%);
+}
+
+.time-night {
+background: linear-gradient(135deg, #263238 0%, #37474F 50%, #455A64 100%);
+}
+
+/* Login Message Styles */
+.login-message {
+    margin: 0 0 1.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    animation: slideDown 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.login-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+}
+
+.login-message i {
+    font-size: 1.25rem;
+}
+
+.login-message.success {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(76, 175, 80, 0.05));
+    color: var(--success-color);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1);
+}
+
+.login-message.success::before {
+    background: var(--success-color);
+}
+
+.login-message.error {
+    background: linear-gradient(135deg, rgba(244, 67, 54, 0.15), rgba(244, 67, 54, 0.05));
+    color: var(--error-color);
+    border: 1px solid rgba(244, 67, 54, 0.2);
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.1);
+}
+
+.login-message.error::before {
+    background: var(--error-color);
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0; 
+        transform: translateY(-20px);
+        max-height: 0;
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+        max-height: 100px;
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+.hero-container {
+grid-template-columns: 1fr;
+text-align: center;
+}
+
+.hero h1 {
+font-size: 3rem;
+}
+
+.hero-description {
+margin: 0 auto 2rem;
+}
+}
+
+@media (max-width: 768px) {
+nav {
+padding: 0 1.5rem;
+}
+
+.hero h1 {
+font-size: 2.5rem;
+}
+
+.hero-container,
+.login-form-container {
+padding: 0 1.5rem;
+}
+
+.login-form-container {
+padding: 2rem;
+}
+}
+
+/* Header scroll effect */
+header.scrolled {
+background: var(--glass-bg);
+backdrop-filter: blur(10px);
+box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+<body>
+<!-- Header -->
+<header>
+<nav>
+<a href="{% url 'home' %}" class="logo">
+<div class="logo-icon">⊕</div>
+AI Health
+</a>
+<div class="nav-spacer"></div>
+<div class="theme-toggle" id="themeToggle">
+<div class="theme-toggle-slider">
+<i class="fas fa-sun"></i>
+</div>
+</div>
+</nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero" id="hero">
+<div class="morphing-gradient"></div>
+<div class="particles" id="particles"></div>
+<div class="floating-element element-1"></div>
+<div class="floating-element element-2"></div>
+<div class="floating-element element-3"></div>
+
+<div class="hero-container">
+<div class="hero-content">
+<div class="hero-badge">AI Health</div>
+<h1 id="typing-text">Welcome Back</h1>
+<p class="hero-description">
+Log in to your account to access personalized healthcare insights, schedule appointments, and connect with medical professionals.
+</p>
+</div>
+
+<div class="login-form-container">
+<h2 class="form-title">AI Health</h2>
+<p class="form-subtitle">Secure access to your health dashboard</p>
+<div id="loginMessage"></div>
+    
+<form action="" method="POST" id="loginForm">{% csrf_token %}
+<div class="form-group">
+<label for="username">Username</label>
+<input type="text" class="form-control" id="username" name="username" required placeholder="Enter username" autocomplete="username">
+<span class="input-icon"><i class="fas fa-user"></i></span>
+</div>
+<div class="form-group">
+<label for="password">Password</label>
+<div class="input-group">
+<input type="password" class="form-control" id="password" name="password" required placeholder="Enter password" autocomplete="current-password">
+<div class="input-group-append">
+<span class="input-group-text" id="togglePasswordText"> 
+    <i class="fas fa-eye password-toggle" id="togglePassword" aria-hidden="true"></i>
+</span>
+</div>
+</div>
+<div class="password-strength">
+<div class="password-strength-meter" id="strengthMeter"></div>
+</div>
+<div class="password-strength-text" id="strengthText"></div>
+</div>
+<div class="text-right mb-3">
+<a href="#" class="forgot-password">Forgot password?</a>
+</div>
+<button type="submit" class="btn-login" name="submit">Login</button>
+</form>
+</div>
+</div>
+</section>
+
+<!-- Floating Action Button -->
+<div class="fab" id="helpBtn">
+<i class="fas fa-question"></i>
+</div>
+
+<!-- Help Modal -->
+<div class="help-modal" id="helpModal">
+<div class="help-content">
+<div class="help-header">
+<h3 class="help-title">Need Help?</h3>
+<button class="close-btn" id="closeModal">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<p class="help-text">
+If you're having trouble logging in or accessing your account, please contact our support team. We're here to help you 24/7.
+</p>
+<div class="help-contact">
+<a href="#" class="contact-item">
+<div class="contact-icon">
+<i class="fas fa-envelope"></i>
+</div>
+<span>support@aihealth.com</span>
+</a>
+<a href="#" class="contact-item">
+<div class="contact-icon">
+<i class="fas fa-phone"></i>
+</div>
+<span>+1 (800) 123-4567</span>
+</a>
+<a href="#" class="contact-item">
+<div class="contact-icon">
+<i class="fas fa-comments"></i>
+</div>
+<span>Live Chat</span>
+</a>
+</div>
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+// Function to get CSRF token from cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Form submission with loading state and login handling
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent default form submission
+    
+    const btn = this.querySelector('.btn-login');
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const messageDiv = document.getElementById('loginMessage');
+    const form = this;
+    
+    // Clear any previous message
+    messageDiv.innerHTML = '';
+    messageDiv.className = '';
+    
+    // Add loading state
+    btn.classList.add('loading');
+    btn.textContent = '';
+    
+    // Get CSRF token
+    const csrfToken = getCookie('csrftoken') || 
+                     document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('submit', 'submit');
+    if (csrfToken) {
+        formData.append('csrfmiddlewaretoken', csrfToken);
+    }
+    
+    // Send AJAX request
+    fetch(form.action || window.location.pathname, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Remove loading state
+        btn.classList.remove('loading');
+        btn.textContent = 'Login';
+        
+        // Parse the response to extract the alert message and redirect URL
+        const alertMatch = html.match(/alert\("([^"]*)"\)/);
+        const redirectMatch = html.match(/window\.location='([^']*)'/);
+        
+        if (alertMatch && redirectMatch) {
+            const message = alertMatch[1];
+            const redirectUrl = redirectMatch[1];
+            
+            // Determine if it's a success or error based on the message
+            if (message.toLowerCase().includes('success')) {
+                // Show success message
+                messageDiv.innerHTML = '<i class="fas fa-check-circle"></i> ' + message;
+                messageDiv.className = 'login-message success';
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 2000);
+            } else {
+                // Show error message
+                messageDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
+                messageDiv.className = 'login-message error';
+                
+                // Shake animation for the form
+                const formContainer = document.querySelector('.login-form-container');
+                formContainer.classList.add('shake');
+                setTimeout(() => {
+                    formContainer.classList.remove('shake');
+                }, 500);
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 3000);
+            }
+        } else {
+            // Fallback: if we can't parse the response, show a generic error
+            messageDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> An error occurred. Please try again.';
+            messageDiv.className = 'login-message error';
+            
+            // Shake animation for the form
+            const formContainer = document.querySelector('.login-form-container');
+            formContainer.classList.add('shake');
+            setTimeout(() => {
+                formContainer.classList.remove('shake');
+            }, 500);
+        }
+    })
+    .catch(error => {
+        // Network error
+        console.error('Login error:', error);
+        
+        // Remove loading state
+        btn.classList.remove('loading');
+        btn.textContent = 'Login';
+        
+        messageDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Network error. Please check your connection and try again.';
+        messageDiv.className = 'login-message error';
+        
+        // Shake animation for the form
+        const formContainer = document.querySelector('.login-form-container');
+        formContainer.classList.add('shake');
+        setTimeout(() => {
+            formContainer.classList.remove('shake');
+        }, 500);
+    });
+});
+
+// Function to show login messages (can be called from server response)
+function showLoginMessage(type, message) {
+    const messageDiv = document.getElementById('loginMessage');
+    const btn = document.querySelector('.btn-login');
+    
+    // Remove loading state
+    btn.classList.remove('loading');
+    btn.textContent = 'Login';
+    
+    // Show message
+    if (type === 'success') {
+        messageDiv.innerHTML = '<i class="fas fa-check-circle"></i> ' + message;
+        messageDiv.className = 'login-message success';
+    } else {
+        messageDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
+        messageDiv.className = 'login-message error';
+        
+        // Shake animation for the form
+        const formContainer = document.querySelector('.login-form-container');
+        formContainer.classList.add('shake');
+        setTimeout(() => {
+            formContainer.classList.remove('shake');
+        }, 500);
+    }
+}
+
+// Add smooth focus transitions
+document.querySelectorAll('.form-control').forEach(input => {
+input.addEventListener('focus', function() {
+this.closest('.form-group').style.transform = 'scale(1.02)';
+this.closest('.form-group').style.transition = 'transform 0.3s ease';
+});
+
+input.addEventListener('blur', function() {
+this.closest('.form-group').style.transform = 'scale(1)';
+});
+});
+
+// Header scroll effect
+window.addEventListener('scroll', () => {
+const header = document.querySelector('header');
+if (window.pageYOffset > 100) {
+header.classList.add('scrolled');
+} else {
+header.classList.remove('scrolled');
+}
+});
+
+// Add parallax effect to floating elements
+document.addEventListener('mousemove', (e) => {
+const x = e.clientX / window.innerWidth;
+const y = e.clientY / window.innerHeight;
+  
+document.querySelectorAll('.floating-element').forEach((element, index) => {
+const speed = (index + 1) * 0.5;
+const xPos = (x - 0.5) * speed * 20;
+const yPos = (y - 0.5) * speed * 20;
+element.style.transform = `translate(${xPos}px, ${yPos}px)`;
+});
+});
+
+// Create particles
+function createParticles() {
+const particlesContainer = document.getElementById('particles');
+const particleCount = 50;
+
+for (let i = 0; i < particleCount; i++) {
+const particle = document.createElement('span');
+particle.classList.add('particle');
+    
+// Random size between 5px and 15px
+const size = Math.random() * 10 + 5;
+particle.style.width = `${size}px`;
+particle.style.height = `${size}px`;
+    
+// Random position
+particle.style.left = `${Math.random() * 100}%`;
+particle.style.top = `${Math.random() * 100}%`;
+    
+// Random animation duration between 10s and 20s
+const duration = Math.random() * 10 + 10;
+particle.style.animationDuration = `${duration}s`;
+    
+// Random delay
+particle.style.animationDelay = `${Math.random() * 5}s`;
+    
+particlesContainer.appendChild(particle);
+}
+}
+
+// Typing effect for the hero title
+function typeWriter() {
+const text = "Welcome Back";
+const element = document.getElementById("typing-text");
+let i = 0;
+element.textContent = "";
+    
+function type() {
+if (i < text.length) {
+element.textContent += text.charAt(i);
+i++;
+setTimeout(type, 100);
+}
+}
+    
+type();
+}
+
+// Password strength indicator
+document.getElementById('password').addEventListener('input', function() {
+const password = this.value;
+const strengthMeter = document.getElementById('strengthMeter');
+const strengthText = document.getElementById('strengthText');
+    
+// Reset classes
+strengthMeter.className = 'password-strength-meter';
+    
+if (password.length === 0) {
+strengthMeter.style.width = '0';
+strengthText.textContent = '';
+return;
+}
+    
+// Check password strength
+let strength = 0;
+    
+// Length check
+if (password.length >= 8) strength += 1;
+    
+// Complexity checks
+if (password.match(/[a-z]+/)) strength += 1;
+if (password.match(/[A-Z]+/)) strength += 1;
+if (password.match(/[0-9]+/)) strength += 1;
+if (password.match(/[$@#&!]+/)) strength += 1;
+    
+// Update UI based on strength
+if (strength <= 2) {
+strengthMeter.classList.add('strength-weak');
+strengthText.textContent = 'Weak password';
+} else if (strength <= 3) {
+strengthMeter.classList.add('strength-medium');
+strengthText.textContent = 'Medium password';
+} else {
+strengthMeter.classList.add('strength-strong');
+strengthText.textContent = 'Strong password';
+}
+});
+
+// Password toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function (e) {
+        // Toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        // Toggle the eye icon class (fa-eye-slash for hidden)
+        this.classList.toggle('fa-eye-slash');
+    });
+});
+
+// Theme toggle
+document.getElementById('themeToggle').addEventListener('click', function() {
+document.body.classList.toggle('dark-mode');
+const icon = this.querySelector('i');
+    
+if (document.body.classList.contains('dark-mode')) {
+icon.className = 'fas fa-moon';
+} else {
+icon.className = 'fas fa-sun';
+}
+});
+
+// Help modal
+const helpBtn = document.getElementById('helpBtn');
+const helpModal = document.getElementById('helpModal');
+const closeModal = document.getElementById('closeModal');
+
+helpBtn.addEventListener('click', () => {
+helpModal.classList.add('active');
+});
+
+closeModal.addEventListener('click', () => {
+helpModal.classList.remove('active');
+});
+
+helpModal.addEventListener('click', (e) => {
+if (e.target === helpModal) {
+helpModal.classList.remove('active');
+}
+});
+
+// Time-based background
+function setTimeBasedBackground() {
+const hour = new Date().getHours();
+const hero = document.getElementById('hero');
+    
+// Remove all time classes
+hero.classList.remove('time-morning', 'time-afternoon', 'time-evening', 'time-night');
+    
+// Add appropriate class based on time of day
+if (hour >= 5 && hour < 12) {
+hero.classList.add('time-morning');
+} else if (hour >= 12 && hour < 17) {
+hero.classList.add('time-afternoon');
+} else if (hour >= 17 && hour < 21) {
+hero.classList.add('time-evening');
+} else {
+hero.classList.add('time-night');
+}
+}
+
+// Ripple effect for buttons
+function createRipple(event) {
+const button = event.currentTarget;
+const circle = document.createElement("span");
+const diameter = Math.max(button.clientWidth, button.clientHeight);
+const radius = diameter / 2;
+
+circle.style.width = circle.style.height = `${diameter}px`;
+circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+circle.classList.add("ripple");
+
+const ripple = button.getElementsByClassName("ripple")[0];
+if (ripple) {
+ripple.remove();
+}
+
+button.appendChild(circle);
+}
+
+// Add ripple effect to login button
+const loginButton = document.querySelector('.btn-login');
+loginButton.addEventListener('click', createRipple);
+
+// Add glow effect to form on focus
+const formInputs = document.querySelectorAll('.form-control');
+const loginForm = document.querySelector('.login-form-container');
+
+formInputs.forEach(input => {
+input.addEventListener('focus', () => {
+loginForm.style.boxShadow = '0 0 30px rgba(84, 110, 122, 0.4)';
+});
+
+input.addEventListener('blur', () => {
+loginForm.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.2)';
+});
+});
+
+// Initialize effects when the page loads
+window.addEventListener('load', () => {
+createParticles();
+setTimeout(typeWriter, 500);
+setTimeBasedBackground();
+});
+
+// Update time-based background every minute
+setInterval(setTimeBasedBackground, 60000);
+</script>
+</body>
+</html>

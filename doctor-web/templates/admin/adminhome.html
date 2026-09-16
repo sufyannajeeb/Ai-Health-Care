@@ -1,0 +1,1268 @@
+{% extends "admin_base.html" %}
+
+{% block body %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        /* CSS Variables */
+        :root {
+            --primary-dark: #0a0a0a;
+            --primary-light: #ffffff;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-orange: #f97316;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-yellow: #f59e0b;
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f0f2;
+            color: var(--primary-dark);
+            overflow-x: hidden;
+        }
+
+        /* Keyframe Animations */
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-60px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(60px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(5deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.7); }
+        }
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes barGrow {
+            from { transform: scaleY(0); }
+            to { transform: scaleY(1); }
+        }
+        @keyframes progressFill {
+            from { width: 0%; }
+            to { width: var(--target-width); }
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Container */
+        .dashboard {
+            min-height: 100vh;
+            padding: 2rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            background-size: 200% 200%;
+            border-radius: 32px;
+            padding: 4rem 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            animation: slideInLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+            animation: float 8s ease-in-out infinite;
+        }
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+            animation: float 10s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        .hero-glass { position: relative; z-index: 2; }
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-purple);
+            margin-bottom: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .hero-tag::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+            line-height: 1;
+            letter-spacing: -3px;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 50%, var(--accent-pink) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 8s ease infinite;
+        }
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: #a3a3a3;
+            font-weight: 400;
+            max-width: 650px;
+            line-height: 1.7;
+        }
+
+        /* Real-time Stats */
+        .realtime-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+        }
+        .realtime-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.8rem;
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        .realtime-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--card-gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .realtime-card:hover::before { transform: scaleX(1); }
+        .realtime-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--card-color);
+        }
+        .realtime-card.cyan { --card-gradient: linear-gradient(90deg, var(--accent-cyan), #0891b2); --card-color: var(--accent-cyan); }
+        .realtime-card.purple { --card-gradient: linear-gradient(90deg, var(--accent-purple), #7c3aed); --card-color: var(--accent-purple); }
+        .realtime-card.green { --card-gradient: linear-gradient(90deg, var(--accent-green), #059669); --card-color: var(--accent-green); }
+        .realtime-card.orange { --card-gradient: linear-gradient(90deg, var(--accent-orange), #ea580c); --card-color: var(--accent-orange); }
+        .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+        .stat-icon {
+            width: 48px; height: 48px;
+            background: var(--gray-100);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .realtime-card:hover .stat-icon { background: var(--card-color); transform: rotate(15deg) scale(1.15); }
+        .stat-pulse {
+            width: 10px; height: 10px;
+            background: var(--card-color);
+            border-radius: 50%;
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .stat-pulse::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            background: var(--card-color);
+            border-radius: 50%;
+            animation: ripple 2s ease-out infinite;
+        }
+        .stat-value { font-size: 2.2rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.4rem; animation: countUp 0.6s ease-out; }
+        .stat-label { font-size: 0.8rem; color: var(--gray-500); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ===== NEW: Platform Health Strip ===== */
+        .health-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s both;
+        }
+        .health-card {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1c1c1c 100%);
+            border-radius: 20px;
+            padding: 1.8rem;
+            border: 1px solid #2a2a2a;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .health-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 3px;
+            background: var(--hc-color);
+        }
+        .health-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .health-card.hc-cyan  { --hc-color: var(--accent-cyan); }
+        .health-card.hc-purple{ --hc-color: var(--accent-purple); }
+        .health-card.hc-green { --hc-color: var(--accent-green); }
+        .health-card.hc-pink  { --hc-color: var(--accent-pink); }
+        .hc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.4rem; }
+        .hc-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #666; font-family: 'JetBrains Mono', monospace; }
+        .hc-status { font-size: 0.68rem; font-weight: 700; color: var(--hc-color); background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); }
+        .hc-value { font-size: 2.6rem; font-weight: 900; color: white; letter-spacing: -2px; margin-bottom: 1.2rem; }
+        .hc-bar-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+        .hc-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--hc-color);
+            width: var(--fill-pct);
+            animation: progressFill 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+            --target-width: var(--fill-pct);
+        }
+        .hc-sub { font-size: 0.75rem; color: #555; margin-top: 0.7rem; }
+
+        /* Command Center Grid */
+        .command-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+        .analytics-panel {
+            background: white;
+            border-radius: 28px;
+            padding: 2.5rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+        .panel-title { font-size: 1.6rem; font-weight: 800; color: var(--primary-dark); letter-spacing: -0.5px; }
+        .panel-badge {
+            background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex; align-items: center; gap: 8px;
+            animation: glow 2s ease-in-out infinite;
+        }
+        .panel-badge::before {
+            content: '';
+            width: 8px; height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: breathe 1.5s ease-in-out infinite;
+        }
+
+        /* Data Grid */
+        .data-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .data-cell {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: 1.8rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .data-cell:hover { background: white; border-color: var(--accent-purple); transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .data-metric { font-size: 0.75rem; color: var(--gray-500); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .data-value { font-size: 2.5rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 1rem; letter-spacing: -1px; }
+        .data-chart { height: 60px; display: flex; align-items: flex-end; gap: 4px; }
+        .data-bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+            border-radius: 4px 4px 0 0;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            transform-origin: bottom;
+            animation: barGrow 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+        .data-cell:hover .data-bar { opacity: 1; background: linear-gradient(180deg, var(--accent-cyan) 0%, var(--accent-blue) 100%); }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: white;
+            border-radius: 28px;
+            padding: 2.5rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .action-item {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+        }
+        .action-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--action-color);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        .action-item:hover::before { transform: scaleY(1); }
+        .action-item:hover { background: white; border-color: var(--action-color); transform: translateX(8px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .action-item.purple { --action-color: var(--accent-purple); }
+        .action-item.cyan { --action-color: var(--accent-cyan); }
+        .action-item.orange { --action-color: var(--accent-orange); }
+        .action-item.green { --action-color: var(--accent-green); }
+        .action-content { display: flex; align-items: center; gap: 1.2rem; }
+        .action-icon {
+            width: 52px; height: 52px;
+            background: white;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .action-item:hover .action-icon { background: var(--action-color); transform: rotate(-10deg) scale(1.1); }
+        .action-text { flex: 1; }
+        .action-title { font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 0.3rem; }
+        .action-desc { font-size: 0.75rem; color: var(--gray-500); }
+        .action-arrow { font-size: 1.3rem; color: var(--gray-300); transition: all 0.3s ease; }
+        .action-item:hover .action-arrow { color: var(--action-color); transform: translateX(5px); }
+
+        /* ===== NEW: Activity Sparkline Row ===== */
+        .activity-row {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s both;
+        }
+
+        /* Weekly Activity Chart */
+        .chart-panel {
+            background: white;
+            border-radius: 28px;
+            padding: 2.5rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 140px;
+            margin-top: 2rem;
+        }
+        .chart-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+        .chart-bar-wrap {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            align-items: flex-end;
+            border-radius: 6px;
+            background: var(--gray-50);
+            overflow: hidden;
+        }
+        .chart-bar-inner {
+            width: 100%;
+            background: linear-gradient(180deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+            border-radius: 6px;
+            transform-origin: bottom;
+            animation: barGrow 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            transition: all 0.3s ease;
+        }
+        .chart-bar-inner.active {
+            background: linear-gradient(180deg, var(--accent-cyan) 0%, var(--accent-blue) 100%);
+        }
+        .chart-col:hover .chart-bar-inner { filter: brightness(1.2); }
+        .chart-day { font-size: 0.65rem; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Donut Ring */
+        .donut-panel {
+            background: white;
+            border-radius: 28px;
+            padding: 2rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        .donut-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 1rem 0;
+        }
+        .donut-svg { width: 130px; height: 130px; transform: rotate(-90deg); }
+        .donut-track { fill: none; stroke: var(--gray-100); stroke-width: 14; }
+        .donut-fill {
+            fill: none;
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 339.29;
+            stroke-dashoffset: 339.29;
+            animation: dash 2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+        }
+        .donut-fill.c1 { stroke: var(--accent-purple); stroke-dashoffset: 110; }
+        .donut-fill.c2 { stroke: var(--accent-cyan); stroke-dashoffset: 200; }
+        .donut-fill.c3 { stroke: var(--accent-green); stroke-dashoffset: 270; }
+        .donut-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .donut-pct { font-size: 1.8rem; font-weight: 900; color: var(--primary-dark); letter-spacing: -1px; }
+        .donut-pct-label { font-size: 0.65rem; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px; }
+        .donut-legend { display: flex; flex-direction: column; gap: 0.6rem; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 600; color: var(--gray-600); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+        /* Status List */
+        .status-panel {
+            background: white;
+            border-radius: 28px;
+            padding: 2rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .status-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+        .status-item { display: flex; flex-direction: column; gap: 6px; }
+        .status-top { display: flex; justify-content: space-between; align-items: center; }
+        .status-name { font-size: 0.82rem; font-weight: 600; color: var(--gray-700); }
+        .status-num { font-size: 0.8rem; font-weight: 700; color: var(--gray-500); font-family: 'JetBrains Mono', monospace; }
+        .status-track { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+        .status-bar {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--sb-color);
+            width: var(--sb-pct);
+            animation: progressFill 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+            --target-width: var(--sb-pct);
+        }
+
+        /* Main Metrics Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 28px;
+            padding: 2.8rem;
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .metric-card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.15); border-color: var(--metric-color); }
+        .metric-card.primary { --metric-color: var(--accent-purple); }
+        .metric-card.success { --metric-color: var(--accent-green); }
+        .metric-card.warning { --metric-color: var(--accent-orange); }
+        .metric-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2.2rem; position: relative; z-index: 1; }
+        .metric-icon-box {
+            width: 85px; height: 85px;
+            background: var(--gray-100);
+            border-radius: 22px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.8rem;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .metric-icon-box::after {
+            content: '';
+            position: absolute; top: -5px; right: -5px;
+            width: 20px; height: 20px;
+            background: var(--metric-color);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .metric-card:hover .metric-icon-box { background: var(--metric-color); transform: rotate(-15deg) scale(1.15); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        .metric-card:hover .metric-icon-box::after { opacity: 1; animation: pulse 1.5s ease-in-out infinite; }
+        .metric-tag {
+            background: var(--gray-100);
+            color: var(--primary-dark);
+            padding: 9px 20px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
+        }
+        .metric-card:hover .metric-tag { background: var(--metric-color); color: white; }
+        .metric-info { position: relative; z-index: 1; margin-bottom: 2rem; }
+        .metric-label { font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gray-500); margin-bottom: 1.2rem; }
+        .metric-display { display: flex; align-items: baseline; gap: 15px; margin-bottom: 1.8rem; }
+        .metric-number { font-size: 4.5rem; font-weight: 900; color: var(--primary-dark); line-height: 1; letter-spacing: -3px; }
+        .metric-unit { font-size: 1.3rem; font-weight: 600; color: var(--gray-400); }
+        .metric-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.8rem; border-top: 2px solid var(--gray-100); position: relative; z-index: 1; }
+        .metric-link { color: var(--primary-dark); text-decoration: none; font-weight: 700; font-size: 1rem; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .metric-link::after { content: '→'; font-size: 1.4rem; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .metric-link:hover { color: var(--metric-color); gap: 16px; }
+        .metric-link:hover::after { transform: translateX(5px); }
+        .metric-trend { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 700; padding: 8px 16px; border-radius: 50px; }
+        .metric-trend.up { background: rgba(16,185,129,0.1); color: var(--accent-green); }
+        .metric-trend.down { background: rgba(239,68,68,0.1); color: #ef4444; }
+
+        /* ===== NEW: Dark Info Band ===== */
+        .info-band {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s both;
+        }
+        .info-tile {
+            background: #0f0f0f;
+            border-radius: 24px;
+            padding: 2.2rem;
+            border: 1px solid #1e1e1e;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .info-tile::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, var(--it-color) 0%, transparent 70%);
+            opacity: 0.15;
+            transition: opacity 0.3s ease;
+        }
+        .info-tile:hover::after { opacity: 0.3; }
+        .info-tile:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-color: var(--it-color); }
+        .info-tile.it1 { --it-color: var(--accent-purple); }
+        .info-tile.it2 { --it-color: var(--accent-cyan); }
+        .info-tile.it3 { --it-color: var(--accent-orange); }
+        .it-eyebrow { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--it-color); font-family: 'JetBrains Mono', monospace; margin-bottom: 1rem; }
+        .it-headline { font-size: 1.05rem; font-weight: 800; color: white; margin-bottom: 0.7rem; }
+        .it-body { font-size: 0.85rem; color: #666; line-height: 1.65; }
+        .it-kpi-row { display: flex; gap: 1.5rem; margin-top: 1.4rem; }
+        .it-kpi { display: flex; flex-direction: column; gap: 3px; }
+        .it-kpi-val { font-size: 1.4rem; font-weight: 900; color: white; letter-spacing: -0.5px; font-family: 'JetBrains Mono', monospace; }
+        .it-kpi-label { font-size: 0.65rem; color: #555; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+        /* Advanced Timeline */
+        .timeline-section {
+            background: white;
+            border-radius: 28px;
+            padding: 3rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+        }
+        .timeline-header { display: flex; align-items: center; gap: 1.8rem; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid var(--gray-100); }
+        .timeline-icon {
+            width: 68px; height: 68px;
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem;
+            box-shadow: 0 12px 35px rgba(139,92,246,0.35);
+            animation: glow 3s ease-in-out infinite;
+        }
+        .timeline-title { font-size: 2rem; font-weight: 800; color: var(--primary-dark); letter-spacing: -1px; }
+        .timeline-wrapper { position: relative; padding: 2rem 0; }
+        .timeline-entry {
+            display: flex;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            animation: slideInRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .timeline-entry:nth-child(1) { animation-delay: 0.6s; }
+        .timeline-entry:nth-child(2) { animation-delay: 0.7s; }
+        .timeline-entry:nth-child(3) { animation-delay: 0.8s; }
+        .timeline-entry::before {
+            content: '';
+            position: absolute;
+            left: 36px; top: 80px; bottom: -30px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--timeline-color) 0%, transparent 100%);
+        }
+        .timeline-entry:last-child::before { display: none; }
+        .timeline-dot {
+            width: 72px; height: 72px;
+            background: white;
+            border: 5px solid var(--timeline-color);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .timeline-dot::before {
+            content: '';
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140%; height: 140%;
+            border: 2px solid var(--timeline-color);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .timeline-entry:hover .timeline-dot { transform: scale(1.25); box-shadow: 0 0 0 10px rgba(0,0,0,0.05); }
+        .timeline-entry:hover .timeline-dot::before { opacity: 0.5; animation: ripple 2s ease-out infinite; }
+        .timeline-entry:nth-child(1) { --timeline-color: var(--accent-purple); }
+        .timeline-entry:nth-child(2) { --timeline-color: var(--accent-green); }
+        .timeline-entry:nth-child(3) { --timeline-color: var(--accent-orange); }
+        .timeline-body {
+            flex: 1;
+            background: var(--gray-50);
+            padding: 2.2rem;
+            border-radius: 20px;
+            border: 1px solid var(--gray-200);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        .timeline-body::before {
+            content: '';
+            position: absolute;
+            left: -12px; top: 28px;
+            width: 0; height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-right: 12px solid var(--gray-50);
+            transition: all 0.3s ease;
+        }
+        .timeline-entry:hover .timeline-body { background: white; transform: translateX(12px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); border-color: var(--timeline-color); }
+        .timeline-entry:hover .timeline-body::before { border-right-color: white; }
+        .timeline-head { font-weight: 700; font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 0.8rem; letter-spacing: -0.3px; }
+        .timeline-text { color: var(--gray-500); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .command-grid { grid-template-columns: 1fr; }
+            .activity-row { grid-template-columns: 1fr 1fr; }
+            .activity-row .chart-panel { grid-column: 1 / -1; }
+            .health-strip { grid-template-columns: repeat(2, 1fr); }
+            .info-band { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 3.5rem; }
+            .metrics-grid { grid-template-columns: 1fr; }
+            .data-grid { grid-template-columns: 1fr; }
+            .activity-row { grid-template-columns: 1fr; }
+            .info-band { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .dashboard { padding: 1.5rem; }
+            .hero-section { padding: 3rem 2rem; }
+            .hero-title { font-size: 2.8rem; }
+            .realtime-stats { grid-template-columns: repeat(2, 1fr); }
+            .metric-number { font-size: 3.5rem; }
+            .timeline-entry { gap: 1.8rem; }
+            .health-strip { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+
+    <div class="dashboard">
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-glass">
+                <div class="hero-tag">
+                    <span>ADMIN PORTAL</span>
+                </div>
+                <h1 class="hero-title">
+                    Control <span class="hero-gradient">Center</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Real-time monitoring, advanced analytics, and comprehensive management tools for your AiDoctor platform ecosystem.
+                </p>
+            </div>
+        </div>
+
+        <!-- Real-time Stats -->
+        <div class="realtime-stats">
+            <div class="realtime-card cyan">
+                <div class="stat-header">
+                    <div class="stat-icon">👨‍⚕️</div>
+                    <div class="stat-pulse"></div>
+                </div>
+                <div class="stat-value">{{ total_experts }}</div>
+                <div class="stat-label">Total Experts</div>
+            </div>
+            <div class="realtime-card purple">
+                <div class="stat-header">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-pulse"></div>
+                </div>
+                <div class="stat-value">{{ total_users }}</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="realtime-card green">
+                <div class="stat-header">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-pulse"></div>
+                </div>
+                <div class="stat-value">{{ total_workassigns }}</div>
+                <div class="stat-label">Work Assigned</div>
+            </div>
+            <div class="realtime-card orange">
+                <div class="stat-header">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-pulse"></div>
+                </div>
+                <div class="stat-value">{{ total_complaints }}</div>
+                <div class="stat-label">Total Complaints</div>
+            </div>
+        </div>
+
+        <!-- Platform Health Strip (NEW) -->
+        <div class="health-strip">
+            <div class="health-card hc-cyan">
+                <div class="hc-top">
+                    <div class="hc-label">Expert Approval Rate</div>
+                    <div class="hc-status">Live</div>
+                </div>
+                <div class="hc-value">84%</div>
+                <div class="hc-bar-track">
+                    <div class="hc-bar-fill" style="--fill-pct: 84%"></div>
+                </div>
+                <div class="hc-sub">of submitted experts approved</div>
+            </div>
+            <div class="health-card hc-purple">
+                <div class="hc-top">
+                    <div class="hc-label">Complaint Resolution</div>
+                    <div class="hc-status">Live</div>
+                </div>
+                <div class="hc-value">{{ replied_complaints }}/{{ total_complaints }}</div>
+                <div class="hc-bar-track">
+                    <div class="hc-bar-fill" style="--fill-pct: {% if total_complaints %}{% widthratio replied_complaints total_complaints 100 %}{% else %}0{% endif %}%"></div>
+                </div>
+                <div class="hc-sub">replied out of total complaints</div>
+            </div>
+            <div class="health-card hc-green">
+                <div class="hc-top">
+                    <div class="hc-label">Work Completion</div>
+                    <div class="hc-status">Live</div>
+                </div>
+                <div class="hc-value">{{ completed_works }}/{{ total_workassigns }}</div>
+                <div class="hc-bar-track">
+                    <div class="hc-bar-fill" style="--fill-pct: {% if total_workassigns %}{% widthratio completed_works total_workassigns 100 %}{% else %}0{% endif %}%"></div>
+                </div>
+                <div class="hc-sub">assignments completed successfully</div>
+            </div>
+            <div class="health-card hc-pink">
+                <div class="hc-top">
+                    <div class="hc-label">In-Progress Rate</div>
+                    <div class="hc-status">Live</div>
+                </div>
+                <div class="hc-value">{{ progress_works }}/{{ total_workassigns }}</div>
+                <div class="hc-bar-track">
+                    <div class="hc-bar-fill" style="--fill-pct: {% if total_workassigns %}{% widthratio progress_works total_workassigns 100 %}{% else %}0{% endif %}%"></div>
+                </div>
+                <div class="hc-sub">assignments currently in progress</div>
+            </div>
+        </div>
+
+        <!-- Command Center Grid -->
+        <div class="command-grid">
+            <div class="analytics-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">System Overview</h2>
+                    <div class="panel-badge">
+                        <span>LIVE DATA</span>
+                    </div>
+                </div>
+                <div class="data-grid">
+                    <div class="data-cell">
+                        <div class="data-metric">Pending Experts</div>
+                        <div class="data-value">{{ pending_experts }}</div>
+                        <div class="data-chart">
+                            <div class="data-bar" style="height:55%"></div>
+                            <div class="data-bar" style="height:75%"></div>
+                            <div class="data-bar" style="height:48%"></div>
+                            <div class="data-bar" style="height:85%"></div>
+                            <div class="data-bar" style="height:62%"></div>
+                            <div class="data-bar" style="height:92%"></div>
+                            <div class="data-bar" style="height:78%"></div>
+                            <div class="data-bar" style="height:95%"></div>
+                        </div>
+                    </div>
+                    <div class="data-cell">
+                        <div class="data-metric">Replied Complaints</div>
+                        <div class="data-value">{{ replied_complaints }}</div>
+                        <div class="data-chart">
+                            <div class="data-bar" style="height:68%"></div>
+                            <div class="data-bar" style="height:82%"></div>
+                            <div class="data-bar" style="height:55%"></div>
+                            <div class="data-bar" style="height:90%"></div>
+                            <div class="data-bar" style="height:73%"></div>
+                            <div class="data-bar" style="height:88%"></div>
+                            <div class="data-bar" style="height:65%"></div>
+                            <div class="data-bar" style="height:96%"></div>
+                        </div>
+                    </div>
+                    <div class="data-cell">
+                        <div class="data-metric">Completed Works</div>
+                        <div class="data-value">{{ completed_works }}</div>
+                        <div class="data-chart">
+                            <div class="data-bar" style="height:72%"></div>
+                            <div class="data-bar" style="height:58%"></div>
+                            <div class="data-bar" style="height:85%"></div>
+                            <div class="data-bar" style="height:62%"></div>
+                            <div class="data-bar" style="height:78%"></div>
+                            <div class="data-bar" style="height:92%"></div>
+                            <div class="data-bar" style="height:68%"></div>
+                            <div class="data-bar" style="height:88%"></div>
+                        </div>
+                    </div>
+                    <div class="data-cell">
+                        <div class="data-metric">In Progress</div>
+                        <div class="data-value">{{ progress_works }}</div>
+                        <div class="data-chart">
+                            <div class="data-bar" style="height:65%"></div>
+                            <div class="data-bar" style="height:78%"></div>
+                            <div class="data-bar" style="height:52%"></div>
+                            <div class="data-bar" style="height:88%"></div>
+                            <div class="data-bar" style="height:70%"></div>
+                            <div class="data-bar" style="height:95%"></div>
+                            <div class="data-bar" style="height:82%"></div>
+                            <div class="data-bar" style="height:90%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <div class="panel-header">
+                    <h2 class="panel-title">Quick Actions</h2>
+                </div>
+                <a href="/admin_verify_expert" class="action-item purple">
+                    <div class="action-content">
+                        <div class="action-icon">👨‍⚕️</div>
+                        <div class="action-text">
+                            <div class="action-title">Verify Experts</div>
+                            <div class="action-desc">{{ pending_experts }} pending approvals</div>
+                        </div>
+                        <div class="action-arrow">→</div>
+                    </div>
+                </a>
+                <a href="/admin_view_user" class="action-item cyan">
+                    <div class="action-content">
+                        <div class="action-icon">👥</div>
+                        <div class="action-text">
+                            <div class="action-title">User Management</div>
+                            <div class="action-desc">Manage {{ total_users }} users</div>
+                        </div>
+                        <div class="action-arrow">→</div>
+                    </div>
+                </a>
+                <a href="/admin_view_complaints" class="action-item orange">
+                    <div class="action-content">
+                        <div class="action-icon">📋</div>
+                        <div class="action-text">
+                            <div class="action-title">Complaints</div>
+                            <div class="action-desc">{{ pending_complaints }} open tickets</div>
+                        </div>
+                        <div class="action-arrow">→</div>
+                    </div>
+                </a>
+                <a href="/assign_work" class="action-item green">
+                    <div class="action-content">
+                        <div class="action-icon">⚙️</div>
+                        <div class="action-text">
+                            <div class="action-title">Assign Work</div>
+                            <div class="action-desc">Create new assignment</div>
+                        </div>
+                        <div class="action-arrow">→</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Activity Row (NEW) -->
+        <div class="activity-row">
+            <!-- Weekly Activity Chart -->
+            <div class="chart-panel">
+                <div class="panel-header" style="margin-bottom: 0;">
+                    <h2 class="panel-title">Weekly Activity</h2>
+                    <div style="font-size:0.75rem;font-weight:700;color:var(--gray-400);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;">This Week</div>
+                </div>
+                <div class="chart-bars">
+                    <div class="chart-col">
+                        <div class="chart-bar-wrap">
+                            <div class="chart-bar-inner" style="height:45%;animation-delay:0.1s"></div>
+                        </div>
+                        <div class="chart-day">Mon</div>
+                    </div>
+                    <div class="chart-col">
+                        <div class="chart-bar-wrap">
+                            <div class="chart-bar-inner" style="height:72%;animation-delay:0.15s"></div>
+                        </div>
+                        <div class="chart-day">Tue</div>
+                    </div>
+                    <div class="chart-col">
+                        <div class="chart-bar-wrap">
+                            <div class="chart-bar-inner" style="height:58%;animation-delay:0.2s"></div>
+                        </div>
+                        <div class="chart-day">Wed</div>
+                    </div>
+                    <div class="chart-col">
+                        <div class="chart-bar-wrap">
+                            <div class="chart-bar-inner" style="height:88%;animation-delay:0.25s"></div>
+                        </div>
+                        <div class="chart-day">Thu</div>
+                    </div>
+                    <div class="chart-col">
+                        <div class="chart-bar-wrap">
+                            <div class="chart-bar-inner" style="height:65%;animation-delay:0.3s"></div>
+                        </div>
+                        <div class="chart-day">Fri</div>
+                    </div>
+                    <div class="chart-col">
+                        <div class="chart-bar-wrap">
+                            <div class="chart-bar-inner active" style="height:95%;animation-delay:0.35s"></div>
+                        </div>
+                        <div class="chart-day" style="color:var(--accent-cyan)">Sat</div>
+                    </div>
+                    <div class="chart-col">
+                        <div class="chart-bar-wrap">
+                            <div class="chart-bar-inner active" style="height:80%;animation-delay:0.4s"></div>
+                        </div>
+                        <div class="chart-day" style="color:var(--accent-cyan)">Sun</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donut Chart -->
+            <div class="donut-panel">
+                <div class="panel-title" style="font-size:1.2rem;">Work Status</div>
+                <div class="donut-wrap">
+                    <svg class="donut-svg" viewBox="0 0 120 120">
+                        <circle class="donut-track" cx="60" cy="60" r="54"/>
+                        <circle class="donut-fill c3" cx="60" cy="60" r="54"/>
+                        <circle class="donut-fill c2" cx="60" cy="60" r="54"/>
+                        <circle class="donut-fill c1" cx="60" cy="60" r="54"/>
+                    </svg>
+                    <div class="donut-center">
+                        <div class="donut-pct">{{ total_workassigns }}</div>
+                        <div class="donut-pct-label">Total</div>
+                    </div>
+                </div>
+                <div class="donut-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--accent-purple)"></div>
+                        Completed — {{ completed_works }}
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--accent-cyan)"></div>
+                        In Progress — {{ progress_works }}
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--accent-green)"></div>
+                        Assigned — {{ total_workassigns }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Breakdown -->
+            <div class="status-panel">
+                <div class="panel-title" style="font-size:1.2rem;">Platform Breakdown</div>
+                <div class="status-list">
+                    <div class="status-item">
+                        <div class="status-top">
+                            <div class="status-name">Total Experts</div>
+                            <div class="status-num">{{ total_experts }}</div>
+                        </div>
+                        <div class="status-track">
+                            <div class="status-bar" style="--sb-color: var(--accent-cyan); --sb-pct: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-top">
+                            <div class="status-name">Pending Experts</div>
+                            <div class="status-num">{{ pending_experts }}</div>
+                        </div>
+                        <div class="status-track">
+                            <div class="status-bar" style="--sb-color: var(--accent-purple); --sb-pct: 40%;"></div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-top">
+                            <div class="status-name">Total Users</div>
+                            <div class="status-num">{{ total_users }}</div>
+                        </div>
+                        <div class="status-track">
+                            <div class="status-bar" style="--sb-color: var(--accent-green); --sb-pct: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-top">
+                            <div class="status-name">Open Complaints</div>
+                            <div class="status-num">{{ pending_complaints }}</div>
+                        </div>
+                        <div class="status-track">
+                            <div class="status-bar" style="--sb-color: var(--accent-orange); --sb-pct: 30%;"></div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-top">
+                            <div class="status-name">Replied Complaints</div>
+                            <div class="status-num">{{ replied_complaints }}</div>
+                        </div>
+                        <div class="status-track">
+                            <div class="status-bar" style="--sb-color: var(--accent-pink); --sb-pct: 65%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Metrics Cards -->
+        <div class="metrics-grid">
+            <div class="metric-card primary">
+                <div class="metric-top">
+                    <div class="metric-icon-box">👨‍⚕️</div>
+                    <div class="metric-tag">Urgent</div>
+                </div>
+                <div class="metric-info">
+                    <div class="metric-label">Experts Pending Verification</div>
+                    <div class="metric-display">
+                        <div class="metric-number">{{ pending_experts|stringformat:"02d" }}</div>
+                        <div class="metric-unit">experts</div>
+                    </div>
+                </div>
+                <div class="metric-bottom">
+                    <a href="/admin_verify_expert" class="metric-link">Review Now</a>
+                    <div class="metric-trend up">↑ New</div>
+                </div>
+            </div>
+            <div class="metric-card success">
+                <div class="metric-top">
+                    <div class="metric-icon-box">👥</div>
+                    <div class="metric-tag">Active</div>
+                </div>
+                <div class="metric-info">
+                    <div class="metric-label">Active User Accounts</div>
+                    <div class="metric-display">
+                        <div class="metric-number">{{ total_users }}</div>
+                        <div class="metric-unit">users</div>
+                    </div>
+                </div>
+                <div class="metric-bottom">
+                    <a href="/admin_view_user" class="metric-link">View Details</a>
+                    <div class="metric-trend up">↑ Growing</div>
+                </div>
+            </div>
+            <div class="metric-card warning">
+                <div class="metric-top">
+                    <div class="metric-icon-box">📋</div>
+                    <div class="metric-tag">Open</div>
+                </div>
+                <div class="metric-info">
+                    <div class="metric-label">Open Complaints</div>
+                    <div class="metric-display">
+                        <div class="metric-number">{{ pending_complaints|stringformat:"02d" }}</div>
+                        <div class="metric-unit">tickets</div>
+                    </div>
+                </div>
+                <div class="metric-bottom">
+                    <a href="/admin_view_complaints" class="metric-link">Manage Tickets</a>
+                    <div class="metric-trend {% if pending_complaints > 5 %}up{% else %}down{% endif %}">
+                        {% if pending_complaints > 5 %}↑{% else %}↓{% endif %} Monitor
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dark Info Band (NEW) -->
+        <div class="info-band">
+            <div class="info-tile it1">
+                <div class="it-eyebrow">Expert Pipeline</div>
+                <div class="it-headline">Expert Onboarding Status</div>
+                <div class="it-body">Track the flow of healthcare professionals from registration through verification to active status on the platform.</div>
+                <div class="it-kpi-row">
+                    <div class="it-kpi">
+                        <div class="it-kpi-val">{{ total_experts }}</div>
+                        <div class="it-kpi-label">Total</div>
+                    </div>
+                    <div class="it-kpi">
+                        <div class="it-kpi-val">{{ pending_experts }}</div>
+                        <div class="it-kpi-label">Pending</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info-tile it2">
+                <div class="it-eyebrow">Assignment Tracking</div>
+                <div class="it-headline">Work Assignment Overview</div>
+                <div class="it-body">Monitor assignment lifecycle from creation through active progress to successful completion across all expert teams.</div>
+                <div class="it-kpi-row">
+                    <div class="it-kpi">
+                        <div class="it-kpi-val">{{ completed_works }}</div>
+                        <div class="it-kpi-label">Done</div>
+                    </div>
+                    <div class="it-kpi">
+                        <div class="it-kpi-val">{{ progress_works }}</div>
+                        <div class="it-kpi-label">Active</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info-tile it3">
+                <div class="it-eyebrow">Support Queue</div>
+                <div class="it-headline">Complaint Resolution Health</div>
+                <div class="it-body">Ensure timely resolution of user complaints to maintain platform trust and user satisfaction scores.</div>
+                <div class="it-kpi-row">
+                    <div class="it-kpi">
+                        <div class="it-kpi-val">{{ replied_complaints }}</div>
+                        <div class="it-kpi-label">Replied</div>
+                    </div>
+                    <div class="it-kpi">
+                        <div class="it-kpi-val">{{ pending_complaints }}</div>
+                        <div class="it-kpi-label">Open</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Timeline -->
+        <div class="timeline-section">
+            <div class="timeline-header">
+                <div class="timeline-icon">📢</div>
+                <h2 class="timeline-title">System Activity & Notices</h2>
+            </div>
+            <div class="timeline-wrapper">
+                <div class="timeline-entry">
+                    <div class="timeline-dot">📌</div>
+                    <div class="timeline-body">
+                        <h3 class="timeline-head">System Announcement</h3>
+                        <p class="timeline-text">
+                            Welcome to the AiDoctor Admin Portal. You have {{ pending_experts }} expert(s) pending verification and {{ pending_complaints }} complaint(s) awaiting response.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-entry">
+                    <div class="timeline-dot">✅</div>
+                    <div class="timeline-body">
+                        <h3 class="timeline-head">Platform Statistics</h3>
+                        <p class="timeline-text">
+                            Currently managing {{ total_users }} users and {{ total_experts }} experts. {{ total_workassigns }} work assignments have been created, with {{ completed_works }} completed successfully.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-entry">
+                    <div class="timeline-dot">🔔</div>
+                    <div class="timeline-body">
+                        <h3 class="timeline-head">Quick Access</h3>
+                        <p class="timeline-text">
+                            Use the quick action panel to navigate directly to critical admin functions. Monitor work assignments, verify experts, and respond to user complaints efficiently.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

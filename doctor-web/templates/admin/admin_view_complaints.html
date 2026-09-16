@@ -1,0 +1,722 @@
+{% extends 'admin/adminhome.html' %} 
+{% block body %}
+
+<div class="complaints-dashboard-container">
+    <div class="dashboard-header">
+        <h2 class="dashboard-title">
+            <span class="icon-wrapper">📋</span>
+            Complaints Overview
+        </h2>
+        <div class="header-decoration"></div>
+    </div>
+
+    <div class="container-fluid p-0">
+        
+        <!-- Stats Card -->
+        <div class="stats-card mb-4">
+            <div class="stats-content">
+                <div class="stats-icon">
+                    <i class="fa fa-exclamation-triangle"></i>
+                </div>
+                <div class="stats-info">
+                    <h3 class="stats-number">{% if a|length %}{{ a|length }}{% else %}0{% endif %}</h3>
+                    <p class="stats-label">Total Complaints</p>
+                </div>
+            </div>
+            <div class="stats-decoration"></div>
+        </div>
+
+        <!-- Complaints Table Card -->
+        <div class="table-card">
+            <div class="table-card-header">
+                <h5 class="table-card-title">
+                    <i class="fa fa-list-alt mr-2"></i>
+                    Complaint Directory
+                </h5>
+                <div class="header-badge">
+                    <span>{% if a|length %}{{ a|length }}{% else %}0{% endif %} Complaints</span>
+                </div>
+            </div>
+            <div class="table-card-body">
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th><span class="th-content">Date</span></th>
+                                <th><span class="th-content">User</span></th>
+                                <th><span class="th-content">Complaint</span></th>
+                                <th><span class="th-content">Status</span></th>
+                                <th><span class="th-content">Action</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in a %}
+                            <tr class="table-row">
+                                <td data-label="Date">
+                                    <div class="complaint-info">
+                                        <span>{{ i.date }}</span>
+                                    </div>
+                                </td>
+                                <td data-label="User" class="name-cell">
+                                    <div class="user-info">
+                                        <strong class="user-name">{{ i.USER.Name }}</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Complaint">
+                                    <div class="complaint-text">
+                                        <span>{{ i.complaints }}</span>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <div class="status-info">
+                                        {% if i.reply == 'pending' %}
+                                            <span class="status-badge status-pending">Pending</span>
+                                        {% else %}
+                                            <span class="status-badge status-completed">Completed</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td data-label="Action">
+                                    <div class="action-info">
+                                        {% if i.reply == 'pending' %}
+                                            <a href="/admin_reply/{{ i.id }}" class="action-link">
+                                                <i class="fa fa-reply mr-1"></i>
+                                                Reply
+                                            </a>
+                                        {% else %}
+                                            <span class="action-text">Replied</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% for i in b %}
+                            <tr class="table-row">
+                                <td data-label="Date">
+                                    <div class="complaint-info">
+                                        <span>{{ i.date }}</span>
+                                    </div>
+                                </td>
+                                <td data-label="User" class="name-cell">
+                                    <div class="user-info">
+                                        <strong class="user-name">{{ i.USER.name }}</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Complaint">
+                                    <div class="complaint-text">
+                                        <span>{{ i.complaints }}</span>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <div class="status-info">
+                                        {% if i.status == 'pending' %}
+                                            <span class="status-badge status-pending">Pending</span>
+                                        {% else %}
+                                            <span class="status-badge status-completed">Completed</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td data-label="Action">
+                                    <div class="action-info">
+                                        {% if i.status == 'pending' %}
+                                            <a href="/admin_reply_expert/{{ i.id }}" class="action-link">
+                                                <i class="fa fa-reply mr-1"></i>
+                                                Reply
+                                            </a>
+                                        {% else %}
+                                            <span class="action-text">Replied</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ========================================
+       Modern Complaints Dashboard Styles
+       ======================================== */
+    
+    :root {
+        --primary-color: #4a90e2;
+        --primary-dark: #2874d3;
+        --success-color: #28a745;
+        --success-dark: #218838;
+        --danger-color: #dc3545;
+        --danger-dark: #c82333;
+        --warning-color: #ffc107;
+        --info-color: #17a2b8;
+        --dark-color: #343a40;
+        --light-bg: #f8f9fc;
+        --white: #ffffff;
+        --text-primary: #2c3e50;
+        --text-secondary: #6c757d;
+        --border-color: #e3e6f0;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+        --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+        --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+        --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-fast: all 0.15s ease;
+        --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #1a50a6 100%);
+        --gradient-complaints: linear-gradient(135deg, #8b5cf6 0%, #0c244a 100%);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .complaints-dashboard-container {
+        padding: 2rem 0;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ========================================
+       Dashboard Header
+       ======================================== */
+    .dashboard-header {
+        position: relative;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1rem;
+    }
+
+    .dashboard-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        animation: slideInLeft 0.6s ease;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: var(--gradient-complaints);
+        border-radius: 12px;
+        font-size: 1.5rem;
+        box-shadow: var(--shadow-md);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .header-decoration {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 4px;
+        background: var(--gradient-complaints);
+        border-radius: 2px;
+        animation: expandWidth 0.8s ease;
+    }
+
+    @keyframes expandWidth {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100px;
+        }
+    }
+
+    /* ========================================
+       Stats Card
+       ======================================== */
+    .stats-card {
+        position: relative;
+        background: var(--white);
+        border-radius: 16px;
+        padding: 1.75rem 2rem;
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease 0.2s both;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .stats-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stats-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 70px;
+        height: 70px;
+        background: var(--gradient-complaints);
+        border-radius: 16px;
+        font-size: 2rem;
+        color: var(--white);
+        box-shadow: var(--shadow-md);
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .stats-info {
+        flex: 1;
+    }
+
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        line-height: 1;
+        animation: countUp 1s ease;
+    }
+
+    @keyframes countUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .stats-label {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        margin: 0.5rem 0 0;
+    }
+
+    .stats-decoration {
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: var(--gradient-complaints);
+        opacity: 0.1;
+        border-radius: 50%;
+    }
+
+    /* ========================================
+       Table Card
+       ======================================== */
+    .table-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease 0.4s both;
+    }
+
+    .table-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 2rem;
+        background: var(--gradient-complaints);
+        color: var(--white);
+    }
+
+    .table-card-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .header-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+    }
+
+    .table-card-body {
+        padding: 0;
+    }
+
+    /* ========================================
+       Modern Table
+       ======================================== */
+    .table-container {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 600px;
+    }
+
+    .modern-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .modern-table thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .modern-table thead tr {
+        background: var(--dark-color);
+    }
+
+    .modern-table thead th {
+        padding: 1.25rem 1rem;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--white);
+        border-bottom: 3px solid #a78bfa;
+    }
+
+    .th-content {
+        display: inline-block;
+        position: relative;
+    }
+
+    .th-content::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #a78bfa;
+        transition: width 0.3s ease;
+    }
+
+    .modern-table thead th:hover .th-content::after {
+        width: 100%;
+    }
+
+    .modern-table tbody tr {
+        background: var(--white);
+        transition: var(--transition-base);
+        animation: fadeInRow 0.5s ease backwards;
+    }
+
+    @keyframes fadeInRow {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .modern-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+    .modern-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+    .modern-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+    .modern-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+    .modern-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+    .modern-table tbody tr:hover {
+        background: linear-gradient(to right, #f5f3ff, #ffffff);
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(167, 139, 250, 0.15);
+    }
+
+    .modern-table tbody td {
+        padding: 1.25rem 1rem;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    /* ========================================
+       Table Cell Content
+       ======================================== */
+    .complaint-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .user-info {
+        max-width: 200px;
+    }
+
+    .user-name {
+        display: block;
+        font-size: 1rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .complaint-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        max-width: 300px;
+        word-break: break-word;
+    }
+
+    .status-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-completed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .action-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .action-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        background: #f0f4f8;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        transition: var(--transition-base);
+        text-decoration: none;
+    }
+
+    .action-link:hover {
+        background: #e1e8f0;
+        transform: translateY(-2px);
+    }
+
+    .action-text {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        background: #f0f4f8;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+    }
+
+    /* ========================================
+       Responsive Design
+       ======================================== */
+    @media (max-width: 1200px) {
+        .dashboard-title {
+            font-size: 1.75rem;
+        }
+
+        .modern-table {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .complaints-dashboard-container {
+            padding: 1rem 0;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+        }
+
+        .icon-wrapper {
+            width: 40px;
+            height: 40px;
+            font-size: 1.25rem;
+        }
+
+        .stats-card {
+            padding: 1.25rem;
+        }
+
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+        }
+
+        .table-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+        }
+
+        /* Mobile Table Styling */
+        .modern-table thead {
+            display: none;
+        }
+
+        .modern-table tbody tr {
+            display: block;
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .modern-table tbody td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: right;
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modern-table tbody td:last-child {
+            border-bottom: none;
+        }
+
+        .modern-table tbody td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-right: 1rem;
+            text-align: left;
+        }
+
+        .name-cell {
+            text-align: right !important;
+        }
+
+        .user-info {
+            max-width: 100%;
+        }
+
+        .complaint-text,
+        .status-info,
+        .action-info {
+            align-items: flex-end;
+        }
+    }
+
+    /* ========================================
+       Scrollbar Styling
+       ======================================== */
+    .table-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+        background: var(--light-bg);
+        border-radius: 4px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+        background: #8b5cf6;
+        border-radius: 4px;
+        transition: var(--transition-fast);
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+        background: #3b82f6;
+    }
+
+    /* ========================================
+       Loading Animation
+       ======================================== */
+    @keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+
+    .loading {
+        animation: shimmer 2s infinite;
+        background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+        background-size: 1000px 100%;
+    }
+</style>
+
+{% endblock %}

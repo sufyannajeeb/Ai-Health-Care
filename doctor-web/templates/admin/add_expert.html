@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AiDoctor Expert Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/static/reg/css/bootstrap.css" rel="stylesheet" type='text/css' media="all" />
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #eef2f7, #f9fbfd);
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 15px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+        .form-wrapper { max-width: 850px; margin: auto; }
+        .content-agileits {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 40px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+        .content-agileits h4 {
+            margin-top: 30px;
+            font-weight: 600;
+            color: #34495e;
+            border-left: 4px solid #8e9cff;
+            padding-left: 10px;
+        }
+        .control-label {
+            font-weight: 500;
+            margin-top: 12px;
+            color: #2c3e50;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #dfe6ee;
+            box-shadow: none;
+            transition: all 0.2s ease-in-out;
+        }
+        .form-control:focus {
+            border-color: #8e9cff;
+            box-shadow: 0 0 0 3px rgba(142,156,255,0.15);
+        }
+        hr { border-top: 1px solid #e6ecf2; margin: 25px 0; }
+        .home-link-container { text-align: right; margin-bottom: 15px; }
+        .home-link-container a {
+            color: #6c7ae0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .home-link-container a:hover { text-decoration: underline; }
+
+        .btn-lg {
+            background: linear-gradient(45deg, #62249f, #0a44a1);
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            color: white;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        .btn-lg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(95,156,255,0.3);
+            opacity: 0.95;
+        }
+        @media(max-width: 768px) {
+            .content-agileits { padding: 25px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="form-wrapper">
+    <h1>🩺 AiDoctor Expert Registration</h1>
+
+    <div class="content-agileits">
+        <!-- ✅ ORIGINAL FORM LOGIC RESTORED -->
+        <form action="#" method="post" data-toggle="validator" role="form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="home-link-container">
+                <a href="/admin_verify_expert">← Back To Home</a>
+            </div>
+
+            <hr/>
+            <h4>Personal & Professional Details</h4>
+            <hr/>
+
+            <label for="firstname" class="control-label">Full Name</label>
+            <input type="text" class="form-control" id="firstname" name="name"
+                   placeholder="Enter your full name" pattern="[a-z A-Z]+" required>
+
+            <div> <label for="lastname" class="control-label">Expert Type</label>
+            <select class="form-control" id="lastname" name="type" required>
+                <option value="" disabled selected>Select Expert Field</option>
+                <option value="Fitness_expert">Fitness Expert</option>
+                <option value="Health_expert">Health Expert</option>
+                <option value="Mental_expert">Mental Expert</option>
+            </select>
+            </div>
+
+            <label for="userImage" class="control-label">Profile Image</label>
+            <input type="file" class="form-control" id="userImage" name="image" required>
+
+            <label for="expertProof" class="control-label">Verification Proof</label>
+            <input type="file" class="form-control" id="expertProof" name="proof" required>
+
+            <hr/>
+            <h4>Contact & Location</h4>
+            <hr/>
+
+            <label for="inputEmail" class="control-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail" name="email"
+                   placeholder="Enter email address" required>
+
+            <label for="Phone" class="control-label">Phone Number</label>
+            <input type="text" class="form-control" id="Phone" name="phone"
+                   pattern="[6789][0-9]{9}" placeholder="10-digit mobile number" required>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="control-label">Place</label>
+                    <input type="text" class="form-control" name="place" required>
+                </div>
+                <div class="col-sm-6">
+                    <label class="control-label">Post Office</label>
+                    <input type="text" class="form-control" name="post"
+                           pattern="[a-z A-Z]+" required>
+                </div>
+            </div>
+
+            <label class="control-label">District</label>
+            <input type="text" class="form-control" name="district"
+                   pattern="[a-z A-Z]+" required>
+
+            <hr/>
+            <h4>Account Security</h4>
+            <hr/>
+
+            <label for="inputPassword" class="control-label">Password</label>
+            <input type="password" class="form-control" id="inputPassword" name="password" required>
+
+            <button type="submit" class="btn btn-lg btn-block" name="submit">
+                Register Account
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="/static/reg/js/jquery-1.10.2.min.js"></script>
+<script src="/static/reg/js/bootstrap.min.js"></script>
+<script src="/static/reg/js/validator.min.js"></script>
+</body>
+</html>

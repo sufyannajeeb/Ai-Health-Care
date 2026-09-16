@@ -1,0 +1,233 @@
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>AiDoctor Admin</title>
+    <link href="//fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/agri/assets/css/style-starter.css">
+
+    <style>
+        /* ------------------------------------------- */
+        /* --- CORE DESIGN & CONTRAST VARIABLES --- */
+        /* ------------------------------------------- */
+        :root {
+            --primary-color: #1e40afd1; /* Primary Action Blue */
+            --logo-accent-gradient: linear-gradient(90deg, #061b62b9, #7c3aed); /* Deep Blue → Rich Violet */
+
+
+            
+            /* Backgrounds for High Contrast */
+            --page-bg: #f4f6f9; /* Light Gray for Body/Page Background */
+            --container-bg: #ffffff; /* White for Main Content Area */
+            --nav-bg-color: rgba(255, 255, 255, 0.98); /* Near-white for Fixed Header */
+
+            /* Text & Shadow */
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+            --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ------------------------------------------- */
+        /* --- STICKY FOOTER & BASE LAYOUT --- */
+        /* ------------------------------------------- */
+        html { height: 100%; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--page-bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Sticky Footer Logic */
+            margin: 0;
+            padding-top: 80px; /* Space for Fixed Header */
+            color: var(--text-dark);
+        }
+        
+        /* Main Content Wrapper (Pushes Footer Down) */
+        .content-wrap {
+            flex: 1 0 auto; /* Grows to fill available space */
+            background-color: var(--page-bg);
+            padding-bottom: 20px;
+        }
+
+        /* Container for the page content, inside the content-wrap */
+        .page-inner-container {
+            background-color: var(--container-bg);
+            padding: 40px 30px;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+        
+        /* --- HEADER & NAVBAR --- */
+        header { background-color: var(--nav-bg-color); box-shadow: var(--shadow-subtle); }
+        .navbar-brand { font-size: 30px; font-weight: 700; color: var(--text-dark) !important; }
+        .navbar-brand span {
+        background: var(--logo-accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+         background-clip: text;
+         font-weight: 700;
+}
+        .navbar-nav .nav-link { font-weight: 500; color: var(--text-dark) !important; transition: all 0.2s ease; }
+        .navbar-nav .nav-item.active .nav-link, .navbar-nav .nav-link:hover { color: var(--primary-color) !important; background-color: transparent; }
+        .btn-style.btn-secondary { background-color: var(--primary-color); border: 1px solid var(--primary-color); color: #fff; padding: 8px 25px; border-radius: 50px; }
+        .btn-style.btn-secondary:hover { background-color: #0056b3; border-color: #0056b3; }
+
+        /* --- MAIN PLACEHOLDER / HERO (Styles kept for use in the dashboard template) --- */
+        .main-content-placeholder {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b3e5fc 100%);
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .main-content-placeholder h3 { color: var(--primary-color); font-weight: 600; font-size: 28px; }
+
+        /* --- DASHBOARD CARDS (Styles kept for use in the dashboard template) --- */
+        .card-shadow { box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.08) !important; border-radius: 0.35rem; transition: transform 0.2s; }
+        .card-shadow:hover { transform: translateY(-2px); }
+        .card-title { font-size: 14px; font-weight: 700; }
+        .card-text.h1 { font-size: 36px; }
+
+        /* --- FOOTER --- */
+        .w3l-copyright { flex-shrink: 0; background: var(--container-bg); border-top: 1px solid #eee; }
+        .copy-footer-29 { font-size: 15px; color: var(--text-muted); padding: 20px 0; }
+        #movetop { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+    </style>
+</head>
+
+<body>
+    <header id="site-header" class="fixed-top">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg stroke">
+                <h1><a class="navbar-brand mr-lg-5" href="/admin_home">
+                        Ai<span>Doctor</span>
+                    </a></h1>
+                
+                <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse"
+                    data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                    <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/admin_home">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin_verify_expert">Expert</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin_view_user">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin_view_assign">Assign Work</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin_view_complaints">Complaints</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-lg-block d-none">
+                    <a href="/logout" class="btn btn-style btn-secondary ml-lg-3">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="content-wrap">
+        <div class="container py-4">
+            
+            <div class="page-inner-container">
+                {% block body %}
+                {% endblock %}
+            </div> 
+            </div>
+    </div>
+    
+    <section class="w3l-footer-29-main w3l-copyright">
+        <div class="container">
+            <div class="bottom-copies">
+                <p class="copy-footer-29 text-center">© 2026 Ai Doctor. All rights reserved. </p>
+            </div>
+        </div>
+
+        <button onclick="topFunction()" id="movetop" title="Go to top">
+            <span class="fa fa-angle-up"></span>
+        </button>
+        <script>
+            // Scroll to top button logic
+            window.onscroll = function () { scrollFunction() };
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById("movetop").style.display = "block";
+                } else {
+                    document.getElementById("movetop").style.display = "none";
+                }
+            }
+            function topFunction() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+        </script>
+    </section>
+
+    <script>
+        $(function () {
+            $('.navbar-toggler').click(function () {
+                $('body').toggleClass('noscroll');
+            })
+        });
+    </script>
+    <script src="/static/agri/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/agri/assets/js/theme-change.js"></script>
+    <script src="/static/agri/assets/js/owl.carousel.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.owl-one').owlCarousel({
+                loop: true, margin: 0, nav: false, responsiveClass: true, autoplay: true, autoplayTimeout: 5000, autoplaySpeed: 1000, autoplayHoverPause: false,
+                responsive: {
+                    0: { items: 1, nav: false }, 480: { items: 1, nav: false }, 667: { items: 1, nav: true }, 1000: { items: 1, nav: true }
+                }
+            })
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#owl-demo1").owlCarousel({
+                loop: true, margin: 20, nav: false, responsiveClass: true,
+                responsive: {
+                    0: { items: 1, nav: false }, 736: { items: 2, nav: false }, 1000: { items: 3, nav: false, loop: true }
+                }
+            })
+        })
+    </script>
+    <script src="/static/agri/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/static/agri/assets/js/jquery.countup.js"></script>
+    <script>
+        $('.counter').countUp();
+    </script>
+    <script>
+        $(window).on("scroll", function () {
+            var scroll = $(window).scrollTop();
+            if (scroll >= 80) { $("#site-header").addClass("nav-fixed"); } else { $("#site-header").removeClass("nav-fixed"); }
+        });
+        $(".navbar-toggler").on("click", function () { $("header").toggleClass("active"); });
+        $(document).on("ready", function () {
+            if ($(window).width() > 991) { $("header").removeClass("active"); }
+            $(window).on("resize", function () {
+                if ($(window).width() > 991) { $("header").removeClass("active"); }
+            });
+        });
+    </script>
+    <script src="/static/agri/assets/js/bootstrap.min.js"></script>
+
+</body>
+</html>

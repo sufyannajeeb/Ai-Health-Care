@@ -1,0 +1,694 @@
+{% extends 'admin/adminhome.html' %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <title>Assign Works</title>
+    <style>
+        :root {
+            --primary: #2d3748;
+            --primary-light: #4a5568;
+            --accent: #667eea;
+            --accent-dark: #5a67d8;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --surface: #ffffff;
+            --surface-alt: #f7fafc;
+            --text: #2d3748;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --gradient-primary: linear-gradient(135deg, #566192 0%, #764ba2 100%);
+            --gradient-card: linear-gradient(135deg, #07273b 0%, #5a67d8 100%);
+            --gradient-accent: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .page-header h2 {
+            font-family: 'Times-New-Roman', serif;
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Modern Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
+}
+
+.stat-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 160px;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Modern card gradient overlay */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+/* Modern icon container */
+.stat-icon-container {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: var(--gradient-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-icon-container {
+    transform: scale(1.05) rotate(5deg);
+}
+
+/* Number */
+.stat-value {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+/* Label */
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Modern decorative element */
+.stat-decoration {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: var(--gradient-primary);
+    opacity: 0.05;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* FIX: Remove old accent overrides causing style conflicts */
+.stat-card.total,
+.stat-card.assigned,
+.stat-card.progress,
+.stat-card.completed {
+    --accent: #667eea;
+    --accent-dark: #5a67d8;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+        /* Action Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out 0.3s backwards;
+        }
+
+        .btn-assign {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-assign::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .btn-assign:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn-assign:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+        }
+
+        .btn-assign i {
+            font-size: 1.125rem;
+        }
+
+        /* Modern Table Container */
+        .table-container {
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            animation: fadeInUp 0.6s ease-out 0.4s backwards;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* Modern Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--gradient-primary);
+        }
+
+        thead th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: white;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        thead th i {
+            margin-right: 0.5rem;
+            opacity: 0.9;
+        }
+
+        thead th:first-child {
+            text-align: center;
+            width: 60px;
+        }
+
+        thead th:last-child {
+            text-align: center;
+            width: 120px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: var(--surface-alt);
+            transform: scale(1.01);
+        }
+
+        tbody td {
+            padding: 1.25rem 1.5rem;
+            color: var(--text);
+            font-size: 0.9375rem;
+        }
+
+        tbody td:first-child {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Expert Info */
+        .expert-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .expert-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .expert-type {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Work Details */
+        .work-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .work-details {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            max-width: 350px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-height: 1.4;
+        }
+
+        /* Date */
+        .date-display {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Modern Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .status-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-assigned {
+       background: #fee2e2;
+    color: #7f1d1d;
+        }
+
+        .status-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Modern Action Buttons */
+        .action-cell {
+            text-align: center;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            text-decoration: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+            color: white;
+        }
+
+        /* Modern Empty State */
+        .empty-state {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--text-muted);
+            opacity: 0.5;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        .empty-state h3 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-header h2 {
+                font-size: 2.25rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h2 {
+                font-size: 1.875rem;
+            }
+
+            thead th,
+            tbody td {
+                padding: 0.875rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .work-details {
+                max-width: 200px;
+            }
+        }
+
+        /* Modern Scrollbar Styling */
+        .table-responsive::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+            background: var(--surface-alt);
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2>Assign Works</h2>
+        <p>Manage and track work assignments</p>
+    </div>
+
+    {% if data %}
+    <!-- Modern Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <div class="stat-decoration"></div>
+            <div class="stat-icon-container">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-value">{{ data|length }}</div>
+            <div class="stat-label">Total Assignments</div>
+        </div>
+        
+        <div class="stat-card assigned">
+            <div class="stat-decoration"></div>
+            <div class="stat-icon-container">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-value">{{ assigned_count|default:0 }}</div>
+            <div class="stat-label">Assigned</div>
+        </div>
+        
+        <div class="stat-card assigned">
+            <div class="stat-decoration"></div>
+            <div class="stat-icon-container">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-value">{{ progress_count|default:0 }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        
+        <div class="stat-card completed">
+            <div class="stat-decoration"></div>
+            <div class="stat-icon-container">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-value">{{ completed_count|default:0 }}</div>
+            <div class="stat-label">Completed</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+        <a href="/assign_work" class="btn-assign">
+            <i class="fas fa-plus-circle"></i>
+            <span>Assign New Work</span>
+        </a>
+    </div>
+
+    <!-- Modern Table -->
+    <div class="table-container">
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th><i class="fas fa-user-md"></i>Expert</th>
+                        <th><i class="fas fa-briefcase"></i>Work Assignment</th>
+                        <th><i class="fas fa-calendar-alt"></i>Date</th>
+                        <th><i class="fas fa-signal"></i>Status</th>
+                        <th><i class="fas fa-cog"></i>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data %}
+                        {% for i in data %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div class="expert-info">
+                                    <span class="expert-name">{{ i.EXPERT.name }}</span>
+                                    <span class="expert-type">{{ i.EXPERT.type }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="work-title">{{ i.work }}</div>
+                                <div class="work-details" title="{{ i.details }}">
+                                    {{ i.details }}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="date-display">{{ i.date }}</span>
+                            </td>
+                            <td>
+                                {% if i.status == "Assigned" %}
+                                    <span class="status-badge status-assigned">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Assigned</span>
+                                    </span>
+                                {% elif i.status == "In Progress" %}
+                                    <span class="status-badge status-progress">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <span>In Progress</span>
+                                    </span>
+                                {% elif i.status == "Completed" %}
+                                    <span class="status-badge status-completed">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Completed</span>
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-assigned">
+                                        <span>{{ i.status }}</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="action-cell">
+                                <a href="/delete_assign_work/{{ i.id }}" 
+                                   onclick="return confirm('Are you sure you want to delete this assignment?');">
+                                    <button class="btn-delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    <h3>No Assignments Yet</h3>
+                                    <p>Start by assigning work to your team members</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}
